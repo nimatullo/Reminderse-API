@@ -1,0 +1,33 @@
+version: '3.6'
+
+services:
+  api:
+    build: .
+    depends_on:
+      - db
+    environment:
+      SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://postgres:password@db:5432/remarkful
+      MAIL_SERVER_ID: 31583
+      MAIL_API_KEY: Fd2a8YZn9j6A7Wyg3DSp
+      SECRET_KEY: a87aa1f46311e88dc542c43d6c403712
+    networks:
+      - default
+    ports:
+      - 5000:5000
+    restart: always
+  db:
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: remarkful
+    image: postgres:latest
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - default
+    ports:
+      - 5432:5432
+    restart: always
+
+networks:
+  default:
