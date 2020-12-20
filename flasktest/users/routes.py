@@ -14,14 +14,14 @@ users = Blueprint('users', __name__)
 
 @users.route('/api/test', methods=['GET'])
 def test():
-    return jsonify({"message", "hello!"}), 200
+    return jsonify({"message": "hello!"}), 200
 
 
 @users.route('/api/register', methods=['POST'])
 def post():
     CURRENT_USER = current_user(get_jwt_identity())
     if CURRENT_USER:
-        return jsonify({"message", "Already Logged In."}), 400
+        return jsonify({"message": "Already Logged In."}), 400
 
     username = request.json.get('username')
     email = request.json.get('email')
