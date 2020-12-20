@@ -12,7 +12,7 @@ serverId = int(os.environ['MAIL_SERVER_ID'])
 injectionApiKey = os.environ['MAIL_API_KEY']
 print("Hello world!")
 
-client = SocketLabsClient(31583, "c5GEf7s3PTm4w9A6Xeo2")
+client = SocketLabsClient(serverId, injectionApiKey)
 
 message = BasicMessage()
 
