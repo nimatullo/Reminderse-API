@@ -10,6 +10,7 @@ from datetime import date, timedelta
 
 serverId = int(os.environ['MAIL_SERVER_ID'])
 injectionApiKey = os.environ['MAIL_API_KEY']
+print("Hello world!")
 
 client = SocketLabsClient(serverId, injectionApiKey)
 
@@ -111,6 +112,6 @@ def send(email, html_mid):
     message.from_email_address = EmailAddress("no-reply@turtle.nyc")
     message.to_email_address.clear()
     message.to_email_address.append(EmailAddress(email))
-
+    print(message)
     response = client.send(message)
     print(f'Confirmation Email Sent to {email}')
