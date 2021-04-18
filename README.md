@@ -1,4 +1,4 @@
 # reminderse-api
-backend for reminderse.com
+backend for [reminderse](https://www.reminderse.com)
 
 frontend can be found [here](https://github.com/nimatullo/reminderse.com).
