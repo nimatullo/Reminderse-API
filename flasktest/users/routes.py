@@ -57,7 +57,7 @@ def confirm_email_token(token):
 def send_email_confirmation(email):
     token = ts.dumps(email, salt='email-confirm-key')
     html_mid = f'''
-                <p> <a href="https://reminderse.com/confirm-email/{token}">Confirm Email</a></p>
+                <p> <a href="https://www.reminderse.com/confirm-email/{token}">Confirm Email</a></p>
                 '''
     send(email, html_mid)
 
@@ -150,7 +150,7 @@ def change_settings():
     if not CURRENT_USER.email == email:
         CURRENT_USER.email = email
         CURRENT_USER.email_confirmed = False
-        send_confirmation(email)
+        send_email_confirmation(email)
     db.session.commit()
 
     return jsonify({"message": "Changes saved."}), 200

@@ -41,7 +41,7 @@ def send(email, html_mid):
         <tr>
             <td bgcolor="#341952" align="center">
                 <img style="display: block;" width="60%;"
-                    src="https://lh3.googleusercontent.com/8kSEzNUGXPy95APnM53fKy1Aec6_r42FFRodgn4RDsKvfdMRCM9tBxzjKkhrax6NHOR8xo-1cON37ZAXmcxlqgId9l-283w0wqGkNQwKIVOk2e5-kVI4YoSDgduSf29Co7dNvQO765o0O4nYjg5DpdUJf4HtF1nbQpkXNj9scOfTjNJ5dtyt3d_j0xKOCiOkXj6Ce0rIeXvWotryvVjxXnzUHuzifYuw5DlXbvuuU-w9zqdf45aBFH36ougCHb4kgSGx6-w0C2bWzfKv9JrNxyykgqTPah5KmiohaGy9Pc35gvdcjLYpJsyjDfBBWr-MI8-8vMQoFH8-au4Ozs1ahSy-OFrkoki1n_eZjw0NM273sqaH-tl0fe18YYN8CUK2yAv-RksfV3Q7N6MClgBXttPwJurN9TRdq-34pm7r4ZrR7BWRIgtwCYBxKf1yppi19x3pPYKSvIDnK_-MuqqbOcB8qjclXK0w6WiO_6dcCcVd_HM8cDHn_2Ie4hnIbrdPDGr0nmaM-CeVGWyKlGlvEE5UgL2oPH8Vb9MOjTjHjDudHJOc0i36400FGsV4oq3s_dXH-l_a9DXcUi7qmboj-KKs4I27sYXZhrGdL9lB55hwytJzDmMah2HYdJKBsw569vayDDsA2ZVpiQQzdMIzrNegdzTOYJUHTnkwmoFAOEPX7FbjYlXX8K0=w1471-h606-no"
+                    src="https://i.imgur.com/xNqoCRs.png"
                     alt="Reminderse by Turtle Enterprises">
             </td>
         </tr>
@@ -81,13 +81,13 @@ def send(email, html_mid):
                     <tr>
                         <td width="75%">
                             &copy; 2020 Reminderse by Turtle Enterprises<br />
-                            If you do not wish to receive any further emails from us, please unsubscribe.
+                            If you do not wish to receive any further emails from us, please <a href=https://www.reminderse.com/settings">unsubscribe.</a>
                         </td>
                         <td align="right">
                             <table border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>
-                                        <a href="https://www.twitter.com/sherzodnimatullo">
+                                        <a href="https://www.twitter.com/mmvvpp123">
                                             <img src="https://img.icons8.com/android/24/88898c/twitter.png">
                                         </a>
                                     </td>
