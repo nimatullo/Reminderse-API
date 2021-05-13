@@ -13,10 +13,6 @@ s = smtplib.SMTP_SSL(MAIL_SERVER, 465)
 s.login(MY_ADDRESS, PASSWORD)
 
 
-def testing_function():
-    return "Earth to Heroku..."
-
-
 def send_to_each_user():
     print("Quering database for users...")
     list_of_users = Users.query.filter_by(email_confirmed=True).all()
@@ -34,6 +30,7 @@ def send_to_each_user():
         move_date(links)
         move_date(text)
         build_email(user.email, links, text)
+    return len(list_of_users)
 
 
 def move_date(entries):
