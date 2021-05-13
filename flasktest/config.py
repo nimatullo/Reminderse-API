@@ -17,6 +17,6 @@ class Config:
     JWT_ACCESS_COOKIE_PATH = '/api/'
     JWT_REFRESH_COOKIE_PATH = '/token/refresh'
     JWT_CSRF_IN_COOKIES = True
-    JWT_COOKIE_SAMESITE=None
+    JWT_COOKIE_SAMESITE = None
     #JWT_COOKIE_SECURE = True
     JWT_COOKIE_CSRF_PROTECT = False

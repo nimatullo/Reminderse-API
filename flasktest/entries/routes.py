@@ -6,13 +6,10 @@ from flasktest.entries.utils import add_link_to_db, add_text_to_db, category_exi
 from flasktest.users.utils import current_user
 import uuid
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flasktest import daily_email
 
 entries = Blueprint('entries', __name__)
 
-
-@entries.route("/")
-def main():
-    return render_template("index.html")
 
 @entries.route("/api/link/add", methods=["POST"])
 @jwt_required
@@ -273,3 +270,9 @@ def search():
     entries = [links, texts]
 
     return make_response(jsonify(entries), 200)
+
+
+@entries.route('/api/entries/send', methods=["POST"])
+def send_entries():
+    s = daily_email.testing_function()
+    return make_response(s, 200)

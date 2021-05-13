@@ -1,6 +1,4 @@
 import smtplib
-import time
-import sys
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flasktest import app, db
@@ -13,6 +11,10 @@ MY_ADDRESS = "no-reply@turtle.nyc"
 PASSWORD = "2CsD#U66GHW6"
 s = smtplib.SMTP_SSL(MAIL_SERVER, 465)
 s.login(MY_ADDRESS, PASSWORD)
+
+
+def testing_function():
+    return "Earth to Heroku..."
 
 
 def send_to_each_user():
@@ -183,6 +185,3 @@ def send(message):
     '''
     s.send_message(message)
     print("Links and Text email sent to user.")
-
-
-send_to_each_user()
