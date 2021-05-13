@@ -274,10 +274,13 @@ def search():
 
 @entries.route('/api/entries/send', methods=["POST"])
 def send_entries():
-    emails_send = daily_email.send_to_each_user()
-    return make_response(
-        jsonify({
-            "data": "EMAILS SENT SUCCESSFULLY",
-            "number_of_emails": emails_send + " emails sent."
-        })
-    )
+    try:
+        emails_send = daily_email.send_to_each_user()
+        return make_response(
+            jsonify({
+                "data": "EMAILS SENT SUCCESSFULLY",
+                "number_of_emails": emails_send + " emails sent."
+            })
+        )
+    except Exception as err:
+        return make_response(err, 400)
