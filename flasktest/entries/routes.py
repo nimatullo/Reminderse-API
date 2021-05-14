@@ -278,10 +278,16 @@ def search():
 @entries.route('/api/entries/send', methods=["POST"])
 def send_entries():
     emails_sent = daily_email.send_to_each_user()
+    email_list = []
+    for user in emails_sent:
+        email_list.append({
+            "email": user.email,
+            "username": user.username
+        })
     return make_response(
         jsonify({
             "data": "EMAILS SENT SUCCESSFULLY",
             "number_of_emails": f'{len(emails_sent)} emails sent.',
-            "email_list": emails_sent
+            "email_list": email_list
         })
     )
