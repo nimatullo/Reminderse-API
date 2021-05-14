@@ -28,6 +28,13 @@ class Users(db.Model, UserMixin):
     def __repr__(self):
         return "User('{0}', '{1}')".format(self.username, self.email)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email
+        }
+
 
 class Links(db.Model):
 
