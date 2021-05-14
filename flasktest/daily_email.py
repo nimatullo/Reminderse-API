@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from flasktest import db
+from flasktest import db, app
 from flasktest.models import Users, Links, Text
 
 # Log into Zoho Mail Server
@@ -15,7 +15,7 @@ s.login(MY_ADDRESS, PASSWORD)
 
 
 def send_to_each_user():
-    print("Quering database for users...")
+    app.logger.info("Quering database for users...")
     list_of_users = Users.query.filter_by(email_confirmed=True).all()
 
     for user in list_of_users:
@@ -39,7 +39,7 @@ def move_date(entries):
         print("Moving date for entry")
         date = item.date_of_next_send + timedelta(days=int(3))
         item.date_of_next_send = date
-        print("New date is: " + date.strftime("%m/%d/%y"))
+        app.logger.info("New date is: " + date.strftime("%m/%d/%y"))
         db.session.commit()
 
 
