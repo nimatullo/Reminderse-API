@@ -4,6 +4,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from flasktest import db
+from flasktest import app
 from flasktest.models import Users, Links, Text
 
 # Log into Zoho Mail Server
