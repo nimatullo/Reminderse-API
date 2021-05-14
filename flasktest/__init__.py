@@ -1,5 +1,5 @@
-from flasktest.entries.routes import entries
 from flasktest.users.routes import users
+from flasktest.entries.routes import entries
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -10,25 +10,6 @@ from flask_sqlalchemy import SQLAlchemy
 from itsdangerous import URLSafeTimedSerializer
 
 from flasktest.config import Config
-import sys
-from logging.config import dictConfig
-
-dictConfig({
-    'version': 1,
-    'formatters': {'default': {
-        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
-    }},
-    'handlers': {'wsgi': {
-        'class': 'logging.StreamHandler',
-        'stream': 'ext://sys.stdout',
-        'formatter': 'default'
-    }},
-    'root': {
-        'level': 'INFO',
-        'handlers': ['wsgi']
-    }
-})
-
 
 app = Flask(__name__)
 # CORS(app, resources={r'/*': {"origins": ["https://localhost:3000",
