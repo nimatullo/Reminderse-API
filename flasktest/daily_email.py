@@ -31,7 +31,7 @@ def send_to_each_user():
         move_date(links)
         move_date(text)
         build_email(user.email, links, text)
-    return len(list_of_users)
+    return list_of_users
 
 
 def move_date(entries):

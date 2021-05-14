@@ -281,6 +281,7 @@ def send_entries():
     return make_response(
         jsonify({
             "data": "EMAILS SENT SUCCESSFULLY",
-            "number_of_emails": f'{emails_sent} emails sent.'
+            "number_of_emails": f'{len(emails_sent)} emails sent.',
+            "email_list": emails_sent
         })
     )
