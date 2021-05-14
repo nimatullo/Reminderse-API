@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from flasktest import db, app
+from flasktest import db
 from flasktest.models import Users, Links, Text
 
 # Log into Zoho Mail Server
