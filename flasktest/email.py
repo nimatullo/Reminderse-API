@@ -1,12 +1,8 @@
 import os
+
 from socketlabs.injectionapi import SocketLabsClient
 from socketlabs.injectionapi.message.basicmessage import BasicMessage
 from socketlabs.injectionapi.message.emailaddress import EmailAddress
-from flasktest import app, db
-from flask import url_for
-from flasktest.models import Users, Links, Text
-from datetime import date, timedelta
-
 
 serverId = int(os.environ['MAIL_SERVER_ID'])
 injectionApiKey = os.environ['MAIL_API_KEY']
@@ -112,5 +108,5 @@ def send(email, html_mid):
     message.to_email_address.clear()
     message.to_email_address.append(EmailAddress(email))
     print(message.html_body)
-    response = client.send(message)
+    client.send(message)
     print(f'Confirmation Email Sent to {email}')

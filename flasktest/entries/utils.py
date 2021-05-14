@@ -1,9 +1,10 @@
-from flask import url_for, request
+from datetime import date, timedelta
+
+from flask_jwt_extended import get_jwt_identity
+
 from flasktest import db
 from flasktest.models import Links, Category, Text
 from flasktest.users.utils import current_user
-from datetime import date, timedelta
-from flask_jwt_extended import get_jwt_identity
 
 
 def add_link_to_db(entry_title, url, category):
@@ -12,7 +13,7 @@ def add_link_to_db(entry_title, url, category):
     '''
     CURRENT_USER = current_user(get_jwt_identity())
     url_validation = check_for_http(url)
-    if(category):
+    if (category):
         category_id = category_exists(category)
         link = Links(entry_title=entry_title, url=url_validation,
                      users=CURRENT_USER, category_id=category_id.id)
@@ -39,7 +40,7 @@ def add_text_to_db(entry_title, text_content, category):
     '''
     If category is not empty, create entry with category already added.
     '''
-    if(category):
+    if (category):
         category_validation = category_exists(category)
         text = Text(entry_title=entry_title, text_content=text_content,
                     users=CURRENT_USER, category_id=category_validation.id)

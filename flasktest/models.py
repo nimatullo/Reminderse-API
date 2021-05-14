@@ -1,8 +1,10 @@
-import sqlalchemy
 from datetime import datetime, timedelta
-from sqlalchemy.dialects.postgresql import UUID
-from flasktest import db, login_manager
+
+import sqlalchemy
 from flask_login import UserMixin
+from sqlalchemy.dialects.postgresql import UUID
+
+from flasktest import db, login_manager
 
 
 @login_manager.user_loader

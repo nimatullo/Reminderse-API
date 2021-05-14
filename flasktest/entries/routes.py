@@ -1,12 +1,15 @@
-from flask import url_for, Blueprint, request, jsonify, make_response, render_template, session, Response
-from flasktest import db
-from flasktest.models import Users, Links, Category, Text
-from datetime import timedelta, date
-from flasktest.entries.utils import add_link_to_db, add_text_to_db, category_exists, get_all_links, get_all_texts, generate_links_dict, generate_text_dict
-from flasktest.users.utils import current_user
 import uuid
+from datetime import timedelta, date
+
+from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
+
 from flasktest import daily_email
+from flasktest import db
+from flasktest.entries.utils import add_link_to_db, add_text_to_db, category_exists, get_all_links, get_all_texts, \
+    generate_links_dict, generate_text_dict
+from flasktest.models import Links, Category, Text
+from flasktest.users.utils import current_user
 
 entries = Blueprint('entries', __name__)
 
@@ -71,7 +74,7 @@ def edit_link_api(link_id):
         link.url = url
         if (category == ""):
             link.category_id = None
-        elif(category):
+        elif (category):
             category_validation = category_exists(category)
             link.category_id = category_validation.id
         if (date):
@@ -97,7 +100,7 @@ def edit_text_api(text_id):
         text.text_content = text_content
         if (category == ""):
             text.category_id = None
-        elif(category):
+        elif (category):
             category_validation = category_exists(category)
             text.category_id = category_validation.id
         if (date):

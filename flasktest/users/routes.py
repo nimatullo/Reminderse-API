@@ -1,13 +1,15 @@
-from flask import Blueprint
-from flask import url_for, request, jsonify, make_response, session
-from flasktest import db, bcrypt, ts
-from flasktest.models import Users, Links, Category, Text
-from flasktest.email import send
-from flask_login import login_user, logout_user, login_required
-from flasktest import app
-from flasktest.users.utils import current_user
-from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, jwt_refresh_token_required, get_jwt_identity, jwt_required, unset_jwt_cookies
 import datetime
+
+from flask import Blueprint
+from flask import request, jsonify, make_response
+from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, \
+    jwt_refresh_token_required, get_jwt_identity, jwt_required, unset_jwt_cookies
+from flask_login import logout_user
+
+from flasktest import db, bcrypt, ts
+from flasktest.email import send
+from flasktest.models import Users, Links, Text
+from flasktest.users.utils import current_user
 
 users = Blueprint('users', __name__)
 
@@ -127,7 +129,7 @@ def logoutmyhouse():
 
 @users.route('/api/confirmed', methods=["GET"])
 @jwt_required
-def isConfirmed():
+def is_confirmed():
     CURRENT_USER = current_user(get_jwt_identity())
     return make_response(jsonify({"user": CURRENT_USER.username, "isConfirmed": CURRENT_USER.email_confirmed}))
 
@@ -142,7 +144,7 @@ def change_settings():
     # Check if username is taken
     user = Users.query.filter_by(username=username).first()
 
-    if(user and not CURRENT_USER.username == username):
+    if user and not CURRENT_USER.username == username:
         return jsonify({"message": "Username is taken."}), 400
     else:
         CURRENT_USER.username = username
@@ -165,7 +167,7 @@ def change_username():
     # Check if username is already taken
     user = Users.query.filter_by(username=new_username).first()
 
-    if(user and not CURRENT_USER.username == new_username):
+    if user and not CURRENT_USER.username == new_username:
         return jsonify({"message": "Username is taken."}), 400
     else:
         CURRENT_USER.username = new_username
@@ -181,7 +183,7 @@ def change_email():
     new_email = request.json.get("email")
 
     if not CURRENT_USER.email == new_email:
-        CURRENT_USER.email == new_email
+        CURRENT_USER.email = new_email
         CURRENT_USER.email_confirmed = False
 
     db.session.commit()

@@ -1,9 +1,10 @@
 import smtplib
+from datetime import date, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from flasktest import app, db
+
+from flasktest import db
 from flasktest.models import Users, Links, Text
-from datetime import date, timedelta
 
 # Log into Zoho Mail Server
 MAIL_SERVER = 'smtp.zoho.com'
