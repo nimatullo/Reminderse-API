@@ -1,5 +1,3 @@
-from flasktest.users.routes import users
-from flasktest.entries.routes import entries
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -24,6 +22,10 @@ mail = Mail(app)
 login_manager.session_protection = 'none'
 ts = URLSafeTimedSerializer(Config.SECRET_KEY)
 jwt = JWTManager(app)
+
+
+from flasktest.users.routes import users
+from flasktest.entries.routes import entries
 
 
 app.register_blueprint(users)
