@@ -37,7 +37,7 @@ def send(email, html_mid):
             <td bgcolor="#341952" align="center">
                 <img style="display: block;" width="60%;"
                     src="https://i.imgur.com/xNqoCRs.png"
-                    alt="Reminderse by Turtle Enterprises">
+                    alt="Reminderse">
             </td>
         </tr>
         <tr>
@@ -75,7 +75,7 @@ def send(email, html_mid):
                 <table border="0" cellpadding="0" cellspacing="0" width="95%">
                     <tr>
                         <td width="75%">
-                            &copy; 2020 Reminderse by Turtle Enterprises<br />
+                            &copy; 2020 Reminderse, Inc.<br />
                             If you do not wish to receive any further emails from us, please <a href=https://www.reminderse.com/settings">unsubscribe.</a>
                         </td>
                         <td align="right">
@@ -104,7 +104,7 @@ def send(email, html_mid):
 </head>
             """
 
-    message.from_email_address = EmailAddress("no-reply@turtle.nyc")
+    message.from_email_address = EmailAddress("hello@reminderse.com")
     message.to_email_address.clear()
     message.to_email_address.append(EmailAddress(email))
     print(message.html_body)
