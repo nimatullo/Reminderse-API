@@ -12,10 +12,8 @@ client = SocketLabsClient(serverId, injectionApiKey)
 message = BasicMessage()
 
 
-def send(email, html_mid):
-    print(f's.id: {serverId}, injAPI: {injectionApiKey}')
-    message.subject = "Confirmation Email"
-    message.html_body = f""" <html xmlns="https://www.w3.org/1999/xhtml">
+HEADER = """\
+    <html xmlns="https://www.w3.org/1999/xhtml">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -30,6 +28,7 @@ def send(email, html_mid):
                 font-family: Arial, Helvetica, sans-serif;
             }}
     </style>
+</head>
 
 <body>
     <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
@@ -40,6 +39,51 @@ def send(email, html_mid):
                     alt="Reminderse">
             </td>
         </tr>
+        """
+
+
+def get_links_body(links):
+    body = f"""\
+        <tr>
+            <td bgcolor="#341952" style="padding: 40px 30px 40px 30px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color: white;">
+                    <tr>
+                        <td>
+                            <h1>Here are your daily links.</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>You've read these in the past. Don't forget about them.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table border="0" cellpadding="0" style="font-size: 14px;">
+                                {links}
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                If you'd like to make changes to the intervals of any of these links,
+                                <a href="https://reminderse.com/entries">click here.</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr> 
+    </table>
+</body>
+</head>
+        """
+    return body
+
+
+def get_confirmation_body(mid):
+    body = f"""\
         <tr>
             <td bgcolor="#341952" style="padding: 40px 30px 40px 30px;">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color: white;">
@@ -56,7 +100,7 @@ def send(email, html_mid):
                     <tr>
                         <td>
                             <table border="0" cellpadding="0" style="font-size: 14px;">
-                                {html_mid}
+                                {mid}
                             </table>
                         </td>
                     </tr>
@@ -70,43 +114,62 @@ def send(email, html_mid):
                 </table>
             </td>
         </tr>
-        <tr>
-            <td bgcolor="#f7f7f7" align="center" style="color:#88898c; padding: 30px 30px 30px 30px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="95%">
-                    <tr>
-                        <td width="75%">
-                            &copy; 2020 Reminderse, Inc.<br />
-                            If you do not wish to receive any further emails from us, please <a href=https://www.reminderse.com/settings">unsubscribe.</a>
-                        </td>
-                        <td align="right">
-                            <table border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td>
-                                        <a href="https://www.twitter.com/mmvvpp123">
-                                            <img src="https://img.icons8.com/android/24/88898c/twitter.png">
-                                        </a>
-                                    </td>
-                                    <td style="font-size: 0; line-height: 0;" width="20">&nbsp;</td>
-                                    <td>
-                                        <a href="https://www.instagram.com/sherzodnimatullo">
-                                            <img src="https://img.icons8.com/android/24/88898c/instagram-new.png">
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+        
     </table>
 </body>
-</head>
-            """
+"""
+    return body
 
+
+FOOTER = """\
+    <tr>
+        <td bgcolor="#f7f7f7" align="center" style="color:#88898c; padding: 30px 30px 30px 30px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="95%">
+                <tr>
+                    <td width="75%">
+                        &copy; 2020 Reminderse, Inc.<br />
+                        If you do not wish to receive any further emails from us, please <a href=https://www.reminderse.com/settings">unsubscribe.</a>
+                    </td>
+                    <td align="right">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td>
+                                    <a href="https://www.twitter.com/mmvvpp123">
+                                        <img src="https://img.icons8.com/android/24/88898c/twitter.png">
+                                    </a>
+                                </td>
+                                <td style="font-size: 0; line-height: 0;" width="20">&nbsp;</td>
+                                <td>
+                                    <a href="https://www.instagram.com/sherzodnimatullo">
+                                        <img src="https://img.icons8.com/android/24/88898c/instagram-new.png">
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    """
+
+
+def send_confirmation(email, html_mid):
+    print(f's.id: {serverId}, injAPI: {injectionApiKey}')
+    message.subject = "Confirmation Email"
+    message.html_body = HEADER + get_confirmation_body(html_mid) + FOOTER
     message.from_email_address = EmailAddress("hello@reminderse.com")
     message.to_email_address.clear()
     message.to_email_address.append(EmailAddress(email))
     print(message.html_body)
     client.send(message)
     print(f'Confirmation Email Sent to {email}')
+
+
+def send_links(email, html_mid):
+    message.subject = "Reminder from Reminderse"
+    message.html_body = HEADER + get_links_body(html_mid) + FOOTER
+    message.from_email_address = EmailAddress("hello@reminderse.com")
+    message.to_email.clear()
+    message.to_email_address.append(EmailAddress(email))
+    client.send(message)

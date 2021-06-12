@@ -6,6 +6,8 @@ from email.mime.text import MIMEText
 from flasktest import db, app
 from flasktest.models import Users, Links, Text
 
+from flasktest.email import send_links
+
 import os
 
 # Log into Zoho Mail Server
@@ -19,21 +21,26 @@ s.login(MY_ADDRESS, PASSWORD)
 def send_to_each_user():
     app.logger.info("Quering database for users...")
     list_of_users = Users.query.filter_by(email_confirmed=True).all()
+    users_sent_to = []
 
     for user in list_of_users:
         print(f'Getting links for {user.email}')
         links = Links.query.filter_by(user_id=user.id).filter_by(
             date_of_next_send=date.today()).all()
+
         print(f'Getting texts for {user.email}')
         text = Text.query.filter_by(user_id=user.id).filter_by(
             date_of_next_send=date.today()).all()
+
         print(f'Found {len(links)} links and {len(text)} texts')
         if len(links) == 0 and len(text) == 0:
             continue
+
+        users_sent_to.append(user)
         move_date(links)
         move_date(text)
         build_email(user.email, links, text)
-    return list_of_users
+    return users_sent_to
 
 
 def move_date(entries):
@@ -48,8 +55,7 @@ def move_date(entries):
 def build_email(email, list_of_links, list_of_texts):
     html_mid = html_links(list_of_links)
     html_mid += html_texts(list_of_texts)
-    msg = build_html_body(email, html_mid)
-    send(msg)
+    send_links(email, html_mid)
 
 
 def html_links(list_of_links):
