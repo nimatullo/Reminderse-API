@@ -170,6 +170,6 @@ def send_links(email, html_mid):
     message.subject = "Reminder from Reminderse"
     message.html_body = HEADER + get_links_body(html_mid) + FOOTER
     message.from_email_address = EmailAddress("hello@reminderse.com")
-    message.to_email.clear()
+    message.to_email_address.clear()
     message.to_email_address.append(EmailAddress(email))
     client.send(message)
