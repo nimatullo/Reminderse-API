@@ -75,9 +75,7 @@ def get_links_body(links):
                 </table>
             </td>
         </tr> 
-    </table>
 </body>
-</head>
         """
     return body
 
@@ -114,8 +112,6 @@ def get_confirmation_body(mid):
                 </table>
             </td>
         </tr>
-        
-    </table>
 </body>
 """
     return body
@@ -151,6 +147,7 @@ FOOTER = """\
             </table>
         </td>
     </tr>
+    </table>
     """
 
 
