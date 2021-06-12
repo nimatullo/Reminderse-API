@@ -7,7 +7,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token, set_ac
 from flask_login import logout_user
 
 from flasktest import db, bcrypt, ts
-from flasktest.email import send
+from flasktest.email import send_confirmation
 from flasktest.models import Users, Links, Text
 from flasktest.users.utils import current_user
 
@@ -61,7 +61,7 @@ def send_email_confirmation(email):
     html_mid = f'''
                 <p> <a href="https://www.reminderse.com/confirm-email/{token}">Confirm Email</a></p>
                 '''
-    send(email, html_mid)
+    send_confirmation(email, html_mid)
 
 
 @users.route('/api/send-email-confirmation', methods=["GET"])
