@@ -6,10 +6,12 @@ from email.mime.text import MIMEText
 from flasktest import db, app
 from flasktest.models import Users, Links, Text
 
+import os
+
 # Log into Zoho Mail Server
 MAIL_SERVER = 'smtp.zoho.com'
-MY_ADDRESS = "no-reply@turtle.nyc"
-PASSWORD = "2CsD#U66GHW6"
+MY_ADDRESS = "hello@reminderse.com"
+PASSWORD = os.environ['MAIL_PASSWORD']
 s = smtplib.SMTP_SSL(MAIL_SERVER, 465)
 s.login(MY_ADDRESS, PASSWORD)
 
