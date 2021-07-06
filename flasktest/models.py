@@ -29,12 +29,13 @@ class Users(db.Model, UserMixin):
         return "User('{0}', '{1}')".format(self.username, self.email)
 
 
-class Links(db.Model):
+def get_new_date():
+    today = datetime.now()
+    new_date = today + timedelta(days=3)
+    return new_date
 
-    def get_new_date():
-        today = datetime.now()
-        new_date = today + timedelta(days=3)
-        return new_date
+
+class Links(db.Model):
 
     __tablename__ = 'links'
     id = db.Column(UUID(as_uuid=False), primary_key=True,
@@ -59,7 +60,7 @@ class Text(db.Model):
                    server_default=sqlalchemy.text("uuid_generate_v4()"))
     entry_title = db.Column(db.String(100), nullable=False)
     text_content = db.Column(db.String(1000), nullable=False)
-    date = Links.get_new_date()
+    date = get_new_date()
     date_of_next_send = db.Column(db.Date, nullable=False, default=date)
     user_id = db.Column(UUID, db.ForeignKey(
         'users.id', ondelete='CASCADE'), nullable=False)

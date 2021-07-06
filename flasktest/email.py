@@ -170,10 +170,3 @@ def send_links(email, html_mid):
     message.to_email_address.clear()
     message.to_email_address.append(EmailAddress(email))
     client.send(message)
-
-
-def make():
-    print(HEADER + get_links_body("HELLO REMINDERSE") + FOOTER)
-
-
-make()

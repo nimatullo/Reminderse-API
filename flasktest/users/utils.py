@@ -1,6 +1,6 @@
 from flasktest.models import Users
 
 
-def current_user(id):
-    current_user_obj = Users.query.filter_by(id=id).first()
+def current_user(user_id):
+    current_user_obj = Users.query.filter_by(id=user_id).first()
     return current_user_obj

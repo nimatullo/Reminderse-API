@@ -52,7 +52,7 @@ def confirm_email_token(token):
         user.email_confirmed = True
         db.session.commit()
         return make_response(jsonify({"message": "Email confirmed"}))
-    except:
+    except Exception as e:
         return make_response(jsonify({"message": "failed"}), 401)
 
 

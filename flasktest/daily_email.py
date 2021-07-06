@@ -59,9 +59,9 @@ def build_email(email, list_of_links, list_of_texts):
 
 
 def html_links(list_of_links):
-    '''
+    """
     Returns HTML list (<li>) of Links whose date_of_next_send matches today's date.
-    '''
+    """
     html_mid = ""
     for link in list_of_links:
         html_mid += '''<tr>
@@ -71,9 +71,9 @@ def html_links(list_of_links):
 
 
 def html_texts(list_of_texts):
-    '''
+    """
     Returns HTML list (<li>) of Links whose date_of_next_send matches today's date.
-    '''
+    """
     html_mid = ""
     for text in list_of_texts:
         url = f'https://reminderse.com/entries'
