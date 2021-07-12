@@ -34,19 +34,19 @@ class UserRepository():
         else:
             return False
 
-    def get_userinfo_id(self, id) -> Users:
-        return Users.query.filter_by(id=id).first()
+    def get_userinfo_id(self, user_id) -> Users:
+        return Users.query.filter_by(id=user_id).first()
 
     def get_userinfo_email(self, email) -> Users:
         return Users.query.filter_by(email=email).first()
 
-    def change_username(self, id, new_username):
-        user = self.get_userinfo_id(id)
+    def change_username(self, user_id, new_username):
+        user = self.get_userinfo_id(user_id)
         user.username = new_username
         return self.save()
 
-    def change_email(self, id, email):
-        user = self.get_userinfo_id(id)
+    def change_email(self, user_id, email):
+        user = self.get_userinfo_id(user_id)
         user.email = email
         user.email_confirmed = False
         return self.save()

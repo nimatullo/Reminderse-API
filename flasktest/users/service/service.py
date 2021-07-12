@@ -1,4 +1,5 @@
 from datetime import timedelta
+from os import access
 from flasktest.email import send_confirmation
 from flasktest.users.repo.repo import UserRepository
 from flask import make_response, jsonify
@@ -7,23 +8,9 @@ from flask_jwt_extended import create_access_token, create_refresh_token, set_ac
     jwt_refresh_token_required, get_jwt_identity, jwt_required, unset_jwt_cookies
 
 
-class UserService():
+class UserService:
     def __init__(self) -> None:
         self.repo = UserRepository()
-
-    def send_confirmation_email(self, email):
-        token = ts.dumps(email, salt='email-confirm-key')
-        html_mid = f'''
-                <p> <a href="https://www.reminderse.com/confirm-email/{token}">Confirm Email</a></p>
-                '''
-        try:
-            send_confirmation(email, html_mid)
-            return make_response({"message": "Email sent successfully"}, 200)
-        except Exception as e:
-            return make_response(jsonify({
-                "message": "Server error",
-                "error": str(e)
-            }), 500)
 
     def signup(self, username, email, password):
         if self.repo.username_exists(username):
@@ -74,17 +61,17 @@ class UserService():
             }),
                 401)
 
-    def update_user_info(self, username, email, current_user):
-        '''
-        WILL BE DEPRECATED
-        '''
-
-        if self.repo.email_exists(email):
-            return make_response(jsonify({
-                "message": "Email is already taken"
-            }), 400)
-        elif current_user.email is not email:
-            current_user.email = email
+    def refresh_token(self, current_user):
+        token_expiration = timedelta(days=7)
+        access_token = create_refresh_token(
+            identity=current_user,
+            expires_delta=token_expiration
+        )
+        response = jsonify({
+            "refreshed": True
+        })
+        set_access_cookies(response, access_token)
+        return make_response(response, 200)
 
     def update_username(self, new_username, current_user):
         if self.repo.username_exists(new_username):
@@ -129,5 +116,23 @@ class UserService():
                 "message": "Server error"
             }), 500)
 
-    def is_password_correct(saved_password_hash, entered_password):
+    def send_confirmation_email(self, email):
+        token = ts.dumps(email, salt='email-confirm-key')
+        html_mid = f'''
+                <p> <a href="https://www.reminderse.com/confirm-email/{token}">Confirm Email</a></p>
+                '''
+        try:
+            send_confirmation(email, html_mid)
+            return make_response({"message": "Email sent successfully"}, 200)
+        except Exception as e:
+            return make_response(jsonify({
+                "message": "Server error",
+                "error": str(e)
+            }), 500)
+
+    def is_password_correct(self, saved_password_hash, entered_password):
         return bcrypt.check_password_hash(saved_password_hash, entered_password)
+
+    def get_current_user(self):
+        current_user_id = get_jwt_identity()
+        return self.repo.get_userinfo_id(current_user_id)
