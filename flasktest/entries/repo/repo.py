@@ -26,9 +26,22 @@ def category_exists(category_title) -> Category:
     return category
 
 
-def get_category(id) -> Category:
+def get_category_by_id(id) -> Category:
     category = Category.query.filter_by(id=id).first()
     return category
+
+
+def get_category_by_title(title) -> Category:
+    category = Category.query.filter_by(title=title).first()
+    return category
+
+
+def add_new_category(title) -> int:
+    category = Category(title=title)
+    if save(category):
+        return category.id
+    else:
+        return -1
 
 
 class TextRepo:
@@ -62,7 +75,7 @@ class LinkRepo:
         return save(link)
 
     def get_all_links_for_user(self, user_id):
-        return Links.query.filter_by(user_id=user_id)
+        return Links.query.filter_by(user_id=user_id).all()
 
     def home_page_texts(self, user_id):
         day = date.today() + timedelta(days=3)

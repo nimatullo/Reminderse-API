@@ -1,3 +1,4 @@
+from flasktest.entries.service.service import EntryService
 import uuid
 from datetime import timedelta, date
 
@@ -8,10 +9,12 @@ from flasktest import daily_email
 from flasktest import db
 from flasktest.entries.utils import add_link_to_db, add_text_to_db, category_exists, get_all_links, get_all_texts, \
     generate_links_dict, generate_text_dict
+from flasktest.users.service.service import UserService
 from flasktest.models import Links, Category, Text
-from flasktest.users.utils import current_user
 
 entries = Blueprint('entries', __name__)
+service = EntryService()
+user_service = UserService()
 
 
 @entries.route("/api/link/add", methods=["POST"])
@@ -22,11 +25,7 @@ def add_link():
         url = request.json.get('url')
         category = request.json.get('category')
 
-        add_link_to_db(entry_title, url, category)
-
-        return make_response(jsonify({'message': "Entry made."}), 201)
-    else:
-        return make_response(jsonify({"message": "Request body must be JSON"}), 400)
+        return service.add_link(entry_title, url, category)
 
 
 @entries.route("/api/text/add", methods=["POST"])
@@ -44,8 +43,10 @@ def add_text():
 @entries.route('/api/link/list', methods=['GET'])
 @jwt_required
 def all_links():
-    CURRENT_USER = current_user(get_jwt_identity())
-    entries = get_all_links(CURRENT_USER.id)
+    CURRENT_USER = user_service.get_current_user()
+    # entries = get_all_links(CURRENT_USER.id)
+    entries = service.generate_links_dict(CURRENT_USER.id)
+    print(entries)
     return jsonify(entries), 200
 
 

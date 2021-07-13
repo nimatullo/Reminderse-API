@@ -4,7 +4,7 @@ from flask_jwt_extended import get_jwt_identity
 
 from flasktest import db
 from flasktest.models import Links, Category, Text
-from flasktest.users.utils import current_user
+# from flasktest.users.utils import current_user
 
 
 def add_link_to_db(entry_title, url, category):
