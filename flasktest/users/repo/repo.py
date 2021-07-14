@@ -12,6 +12,7 @@ class UserRepository():
             db.session.rollback()
             return False
         finally:
+            db.expunge_all()
             db.session.close()
 
         return True

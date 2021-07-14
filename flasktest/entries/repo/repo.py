@@ -1,7 +1,5 @@
 from datetime import date, timedelta
-from flasktest import users
 
-from flasktest.users import service
 from flasktest.users.service.service import UserService
 from flasktest.models import Category, Links, Text
 from flasktest import db
@@ -82,3 +80,26 @@ class LinkRepo:
         return Links.query.filter_by(user_id=user_id).filter(
             Links.date_of_next_send <= day
         )
+
+    def get_link(self, link_id) -> Links:
+        return Links.query.filter_by(id=link_id).first()
+
+    def update_entry_title(self, link_id, entry_title):
+        link = self.get_link(link_id)
+        link.entry_title = entry_title
+        return save()
+
+    def update_url(self, link_id, url):
+        link = self.get_link(link_id)
+        link.url = url
+        return save()
+
+    def update_category(self, link_id, category_id):
+        link = self.get_link(link_id)
+        link.category_id = category_id
+        return save()
+
+    def update_date(self, link_id, date):
+        link = self.get_link(link_id)
+        link.date_of_next_send = date
+        return save()

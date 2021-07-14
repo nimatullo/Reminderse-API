@@ -24,7 +24,7 @@ class UserService:
         result = self.repo.add(username, email, hashed_password)
 
         if result:
-            self.send_confirmation_email()
+            self.send_confirmation_email(email)
             return make_response(jsonify({"message": "Successful signup!"}), 201)
         else:
             return make_response(jsonify({"message": "Server error"}), 500)

@@ -1,5 +1,4 @@
 from flask import make_response, jsonify
-from flasktest.models import Links
 from flasktest.entries.repo.repo import LinkRepo, TextRepo, get_category_by_id
 from flasktest.entries.repo.repo import get_category_by_id, get_category_by_title, category_exists, add_new_category
 from datetime import date
@@ -30,9 +29,36 @@ class EntryService:
                 "message": "Server error"
             }), 500)
 
-    def generate_links_dict(self, user_id):
+    def update_link(self, link_id, user_id, new_title, new_url, new_category, new_date):
+        link = self.link_repo.get_link(link_id)
+        if not link:
+            return make_response(jsonify({
+                "message": "Link not found"
+            }), 404)
+
+        if not link.user_id == user_id:
+            return make_response(jsonify({
+                "message": "Unauthorized"
+            }), 401)
+
+        self.link_repo.update_entry_title(link_id, new_title)
+        self.link_repo.update_url(link_id, new_url)
+        self.link_repo.update_date(link_id, new_date)
+        category = get_category_by_title(new_category)
+        if not category:
+            category = add_new_category(new_category)
+        self.link_repo.update_category(link_id, category.id)
+        return make_response(jsonify({
+            "message": "Link updated"
+        }), 200)
+
+    def get_all_links(self, user_id):
         all_links = self.link_repo.get_all_links_for_user(user_id)
-        return [self.convert_link_to_dictionary(link) for link in all_links]
+        response = [self.convert_link_to_dictionary(
+            link) for link in all_links]
+        return make_response(jsonify({
+            "entries": response
+        }), 200)
 
     def convert_text_to_dictionary(self, text):
         return {

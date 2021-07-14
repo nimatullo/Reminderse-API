@@ -44,10 +44,7 @@ def add_text():
 @jwt_required
 def all_links():
     CURRENT_USER = user_service.get_current_user()
-    # entries = get_all_links(CURRENT_USER.id)
-    entries = service.generate_links_dict(CURRENT_USER.id)
-    print(entries)
-    return jsonify(entries), 200
+    return service.get_all_links(CURRENT_USER.id)
 
 
 @entries.route('/api/text/list', methods=['GET'])
@@ -61,27 +58,17 @@ def all_texts():
 @entries.route("/api/link/<link_id>", methods=["PUT"])
 @jwt_required
 def edit_link_api(link_id):
-    CURRENT_USER = current_user(get_jwt_identity())
-    link = Links.query.filter_by(id=link_id).first()
-    if not link.user_id == CURRENT_USER.id:
-        return jsonify({"message": "You don't have the right privileges."}), 403
-    else:
-        entry_title = request.json.get('entry_title')
-        url = request.json.get('url')
-        category = request.json.get('category')
-        date = request.json.get('date')
-
-        link.entry_title = entry_title
-        link.url = url
-        if (category == ""):
-            link.category_id = None
-        elif (category):
-            category_validation = category_exists(category)
-            link.category_id = category_validation.id
-        if (date):
-            link.date_of_next_send = date
-        db.session.commit()
-        return jsonify({"message": "Changes saved."}), 200
+    CURRENT_USER = user_service.get_current_user()
+    entry_title = request.json.get('entry_title')
+    url = request.json.get('url')
+    category = request.json.get('category')
+    date = request.json.get('date')
+    return service.update_link(link_id,
+                               CURRENT_USER.id,
+                               entry_title,
+                               url,
+                               category,
+                               date)
 
 
 @entries.route("/api/text/<text_id>", methods=["PUT"])
