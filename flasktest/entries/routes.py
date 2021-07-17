@@ -100,25 +100,7 @@ def edit_text_api(text_id):
 @entries.route('/api/link/<link_id>', methods=['GET'])
 @jwt_required
 def get_link(link_id):
-    CURRENT_USER = current_user(get_jwt_identity())
-    link = Links.query.filter_by(
-        user_id=CURRENT_USER.id).filter_by(id=link_id).first()
-
-    if not link:
-        return make_response(jsonify({"message": "Link cannot be found."}), 404)
-    else:
-        category = Category.query.filter_by(id=link.category_id).first()
-        if category:
-            category = category.title
-        else:
-            category = None
-        return make_response(jsonify({
-            "id": link.id,
-            "entry_title": link.entry_title,
-            "url": link.url,
-            "category": category,
-            "date": link.date_of_next_send
-        }), 200)
+    return service.get_link(link_id)
 
 
 @entries.route('/api/text/<text_id>', methods=['GET'])
@@ -148,17 +130,7 @@ def get_text(text_id):
 @entries.route('/api/link/<link_id>/pause', methods=["PUT"])
 @jwt_required
 def pause_link(link_id):
-    CURRENT_USER = current_user(get_jwt_identity())
-    link = Links.query.filter_by(
-        user_id=CURRENT_USER.id).filter_by(id=link_id).first()
-
-    if not link:
-        return make_response(jsonify({"message": "Link does not exist"}), 404)
-    else:
-        paused_date = date.today() - timedelta(days=1)
-        link.date_of_next_send = paused_date
-        db.session.commit()
-        return make_response(jsonify({"message": "Link paused"}), 200)
+    return service.pause_link(link_id)
 
 
 @entries.route('/api/text/<text_id>/pause', methods=["PUT"])
@@ -180,17 +152,7 @@ def pause_text(text_id):
 @entries.route('/api/link/<link_id>/resume', methods=["PUT"])
 @jwt_required
 def resume_link(link_id):
-    CURRENT_USER = current_user(get_jwt_identity())
-    link = Links.query.filter_by(
-        user_id=CURRENT_USER.id).filter_by(id=link_id).first()
-
-    if not link:
-        return make_response(jsonify({"message": "Link does not exist"}), 404)
-    else:
-        resume_date = date.today() + timedelta(days=3)
-        link.date_of_next_send = resume_date
-        db.session.commit()
-        return make_response(jsonify({"message": "Link resumed"}), 200)
+    return service.resume_link(link_id)
 
 
 @entries.route('/api/text/<text_id>/resume', methods=["PUT"])
@@ -212,16 +174,7 @@ def resume_text(text_id):
 @entries.route('/api/link/<link_id>', methods=['DELETE'])
 @jwt_required
 def delete_link(link_id):
-    CURRENT_USER = current_user(get_jwt_identity())
-    link = Links.query.filter_by(
-        user_id=CURRENT_USER.id).filter_by(id=link_id).first()
-
-    if not link:
-        return make_response(jsonify({"message": "Link does not exists"}), 404)
-    else:
-        db.session.delete(link)
-        db.session.commit()
-        return make_response(jsonify({"message": "Link deleted"}), 200)
+    return service.delete_link(link_id)
 
 
 @entries.route('/api/text/<text_id>', methods=['DELETE'])

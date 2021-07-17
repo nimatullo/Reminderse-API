@@ -1,13 +1,52 @@
-from flask import make_response, jsonify
+from flask import json, make_response, jsonify
 from flasktest.entries.repo.repo import LinkRepo, TextRepo, get_category_by_id
 from flasktest.entries.repo.repo import get_category_by_id, get_category_by_title, category_exists, add_new_category
-from datetime import date
+from datetime import date, timedelta
 
 
 class EntryService:
     def __init__(self) -> None:
         self.link_repo = LinkRepo()
         self.text_repo = TextRepo()
+
+    def get_link(self, link_id):
+        link = self.link_repo.get_link(link_id)
+        if not link:
+            return make_response(jsonify({
+                "message": "Link cannot be found"
+            }), 404)
+
+        category = get_category_by_id(link.category_id)
+
+        return make_response(jsonify({
+            "id": link.id,
+            "entry_title": link.entry_title,
+            "url": link.url,
+            "category": category,
+            "date": link.date_of_next_send
+        }), 200)
+
+    def pause_link(self, link_id):
+        paused_date = date.today() - timedelta(days=1)
+        if self.link_repo.update_date(link_id, paused_date):
+            return make_response(jsonify({
+                "message": "Link paused"
+            }), 200)
+        else:
+            return make_response(jsonify({
+                "message": "Link does not exists"
+            }), 404)
+
+    def resume_link(self, link_id):
+        resume_date = date.today + timedelta(days=3)
+        if self.link_repo.update_date(link_id, resume_date):
+            return make_response(jsonify({
+                "message": "Link paused"
+            }), 200)
+        else:
+            return make_response(jsonify({
+                "message": "Link does not exists"
+            }), 404)
 
     def add_link(self, entry_title, url, category_title):
         validated_url = self.validate_url(url)
@@ -51,6 +90,16 @@ class EntryService:
         return make_response(jsonify({
             "message": "Link updated"
         }), 200)
+
+    def delete_link(self, link_id):
+        if self.link_repo.delete_link(link_id):
+            return make_response(jsonify({
+                "message": "Link deletion failed"
+            }), 404)
+        else:
+            return make_response(jsonify({
+                "message": "Link deleted"
+            }), 200)
 
     def get_all_links(self, user_id):
         all_links = self.link_repo.get_all_links_for_user(user_id)
