@@ -7,8 +7,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from flasktest import daily_email
 from flasktest import db
-from flasktest.entries.utils import add_link_to_db, add_text_to_db, category_exists, get_all_links, get_all_texts, \
-    generate_links_dict, generate_text_dict
 from flasktest.users.service.service import UserService
 from flasktest.models import Links, Category, Text
 
