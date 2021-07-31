@@ -1,5 +1,4 @@
 from datetime import date, timedelta
-from flasktest.entries.routes import get_link
 
 from flasktest.users.service.service import UserService
 from flasktest.models import Category, Links, Text
@@ -37,9 +36,9 @@ def get_category_by_title(title) -> Category:
 
 def add_new_category(title) -> int:
     category = Category(title=title)
-    if save(category):
-        return category.id
-    else:
+    try:
+        save(category)
+    except Exception:
         return -1
 
 
@@ -62,6 +61,39 @@ class TextRepo:
             Text.date_of_next_send <= day
         )
 
+    def get_text(self, text_id) -> Text:
+        current_user = self.user_service.get_current_user()
+        return Text.query.filter_by(id=text_id)\
+            .filter_by(user_id=current_user.id)\
+            .first()
+
+    def delete_text(self, text_id):
+        text = self.get_text(text_id)
+        if not text:
+            return False
+        db.session.delete(text)
+        return save()
+
+    def update_entry_title(self, text_id, entry_title):
+        text = self.get_text(text_id)
+        text.entry_title = entry_title
+        return save()
+
+    def update_content(self, text_id, content):
+        text = self.get_text(text_id)
+        text.text_content = content
+        return save()
+
+    def update_category(self, text_id, category_id):
+        text = self.get_text(text_id)
+        text.category_id = category_id
+        return save()
+
+    def update_date(self, text_id, date):
+        text = self.get_text(text_id)
+        text.date_of_next_send = date
+        return save()
+
 
 class LinkRepo:
     def __init__(self) -> None:
@@ -83,7 +115,7 @@ class LinkRepo:
         )
 
     def delete_link(self, link_id):
-        link = get_link(link_id)
+        link = self.get_link(link_id)
         if not link:
             return False
         db.session.delete(link)

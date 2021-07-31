@@ -8,11 +8,11 @@ class UserRepository():
             if data:
                 db.session.add(data)
             db.session.commit()
-        except:
+        except Exception as e:
+            print(f'Exception thrown during UserRepository save(): {e}')
             db.session.rollback()
             return False
         finally:
-            db.expunge_all()
             db.session.close()
 
         return True
