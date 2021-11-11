@@ -14,7 +14,7 @@ service = UserService()
 
 
 @users.route('/api/version', methods=['GET'])
-def version():
+def version_number():
     return jsonify({
         "version": version,
         "build": build}), 200
