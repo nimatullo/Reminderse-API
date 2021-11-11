@@ -10,8 +10,7 @@ from itsdangerous import URLSafeTimedSerializer
 
 
 version = "0.1.3"
-build = subprocess.check_output(
-    "git describe --tags --always HEAD".split()).decode().split()
+build = "pending..."
 
 app = Flask(__name__)
 # CORS(app, resources={r'/*': {"origins": ["https://localhost:3000",
