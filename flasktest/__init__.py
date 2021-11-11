@@ -1,3 +1,5 @@
+from flasktest.entries.routes import entries
+from flasktest.users.routes import users
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -8,6 +10,8 @@ from flask_sqlalchemy import SQLAlchemy
 from itsdangerous import URLSafeTimedSerializer
 
 from flasktest.config import Config
+
+version = "0.1.2"
 
 app = Flask(__name__)
 # CORS(app, resources={r'/*': {"origins": ["https://localhost:3000",
@@ -23,10 +27,6 @@ mail = Mail(app)
 login_manager.session_protection = 'none'
 ts = URLSafeTimedSerializer(Config.SECRET_KEY)
 jwt = JWTManager(app)
-
-
-from flasktest.users.routes import users
-from flasktest.entries.routes import entries
 
 
 app.register_blueprint(users)
