@@ -4,7 +4,9 @@ from socketlabs.injectionapi import SocketLabsClient
 from socketlabs.injectionapi.message.basicmessage import BasicMessage
 from socketlabs.injectionapi.message.emailaddress import EmailAddress
 
-serverId = int(os.environ['MAIL_SERVER_ID'])
+from flasktest import app
+
+serverId = app.config["MAIL_SERVER_ID"]
 injectionApiKey = os.environ['MAIL_API_KEY']
 
 client = SocketLabsClient(serverId, injectionApiKey)

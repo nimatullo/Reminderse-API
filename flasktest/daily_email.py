@@ -13,9 +13,12 @@ import os
 # Log into Zoho Mail Server
 MAIL_SERVER = 'smtp.zoho.com'
 MY_ADDRESS = "hello@reminderse.com"
-PASSWORD = os.environ['MAIL_PASSWORD']
+PASSWORD = app.config["MAIL_PASSWORD"]
 s = smtplib.SMTP_SSL(MAIL_SERVER, 465)
-s.login(MY_ADDRESS, PASSWORD)
+try:
+    s.login(MY_ADDRESS, PASSWORD)
+except smtplib.SMTPAuthenticationError as e:
+    print("Login Failed")
 
 
 def send_to_each_user():
