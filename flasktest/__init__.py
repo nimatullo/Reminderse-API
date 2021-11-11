@@ -23,6 +23,7 @@ elif app.config["ENV"] == "development":
     app.config.from_object("config.DevelopmentConfig")
 
 db = SQLAlchemy(app)
+print(app.config)
 db.create_all()
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
