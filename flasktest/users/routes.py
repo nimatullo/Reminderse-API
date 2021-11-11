@@ -1,4 +1,3 @@
-import datetime
 from flasktest.users.service.service import UserService
 
 from flask import Blueprint
@@ -6,7 +5,7 @@ from flask import request, jsonify, make_response
 from flask_jwt_extended import jwt_refresh_token_required, get_jwt_identity, jwt_required, unset_jwt_cookies
 from flask_login import logout_user
 
-from flasktest import db, ts
+from flasktest import db, ts, version, build
 from flasktest.models import Users, Links, Text
 from flasktest.users import service
 
@@ -14,9 +13,11 @@ users = Blueprint('users', __name__)
 service = UserService()
 
 
-@users.route('/api/test', methods=['GET'])
-def test():
-    return jsonify({"message": "hello!"}), 200
+@users.route('/api/version', methods=['GET'])
+def version():
+    return jsonify({
+        "version": version,
+        "build": build}), 200
 
 
 @users.route('/api/register', methods=['POST'])
