@@ -10,7 +10,7 @@ class Config(object):
 
 
 class ProductionConfig(Config):
-    VERSION = os.environ.get('HEROKU_RELEASE_VERSION')
+    HEROKU_BUILD = os.environ.get('HEROKU_RELEASE_VERSION')
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     MAIL_SERVER = 'smtp.zoho.com'

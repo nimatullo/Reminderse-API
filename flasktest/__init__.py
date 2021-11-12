@@ -1,3 +1,5 @@
+from flasktest.entries.routes import entries
+from flasktest.users.routes import users
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -6,7 +8,6 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from itsdangerous import URLSafeTimedSerializer
-
 
 
 app = Flask(__name__)
@@ -18,7 +19,6 @@ if app.config["ENV"] == "production":
     app.config.from_object("config.ProductionConfig")
 elif app.config["ENV"] == "development":
     app.config.from_object("config.DevelopmentConfig")
-
 
 
 db = SQLAlchemy(app)
@@ -34,8 +34,6 @@ print(app.config)
 
 
 version = "0.1.3"
-build = app.config["HEROKU_RELEASE_VERSION"]
-from flasktest.users.routes import users
-from flasktest.entries.routes import entries
+build = app.config["HEROKU_BUILD"]
 app.register_blueprint(users)
 app.register_blueprint(entries)
