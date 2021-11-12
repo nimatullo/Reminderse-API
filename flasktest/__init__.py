@@ -1,4 +1,3 @@
-import subprocess
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -21,8 +20,6 @@ elif app.config["ENV"] == "development":
     app.config.from_object("config.DevelopmentConfig")
 
 
-version = "0.1.3"
-build = app.config["HEROKU_RELEASE_VERSION"]
 
 db = SQLAlchemy(app)
 db.create_all()
@@ -38,3 +35,6 @@ from flasktest.users.routes import users
 from flasktest.entries.routes import entries
 app.register_blueprint(users)
 app.register_blueprint(entries)
+
+version = "0.1.3"
+build = app.config["HEROKU_RELEASE_VERSION"]
