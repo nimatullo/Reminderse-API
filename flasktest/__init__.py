@@ -18,6 +18,8 @@ if app.config["ENV"] == "production":
     app.config.from_object("config.ProductionConfig")
 elif app.config["ENV"] == "development":
     app.config.from_object("config.DevelopmentConfig")
+elif  app.config["ENV"] == "testing":
+    app.config.from_object("config.TestingConfig")
 
 
 
@@ -33,7 +35,7 @@ jwt = JWTManager(app)
 print(app.config)
 
 
-version = "0.1.3"
+version = "0.0.1"
 build = app.config["HEROKU_BUILD"]
 from flasktest.users.routes import users
 from flasktest.entries.routes import entries
