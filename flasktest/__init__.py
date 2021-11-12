@@ -30,6 +30,8 @@ login_manager.session_protection = 'none'
 ts = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 jwt = JWTManager(app)
 
+print(app.config)
+
 
 from flasktest.users.routes import users
 from flasktest.entries.routes import entries
