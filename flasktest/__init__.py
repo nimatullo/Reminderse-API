@@ -12,7 +12,7 @@ from itsdangerous import URLSafeTimedSerializer
 app = Flask(__name__)
 # CORS(app, resources={r'/*': {"origins": ["https://localhost:3000",
 #                                          "https://reminderse.com"]}}, supports_credentials=True)
-CORS(app, resources={r'/api/*': {"origins":  ["http://localhost:3000"]}})
+CORS(app, resources={r'/api/*': {"origins":  ["http://localhost:3000"]}}, supports_credenttials=True)
 # CORS(app, supports_credentials=True)
 
 if app.config["ENV"] == "production":
