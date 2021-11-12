@@ -9,8 +9,6 @@ from flask_sqlalchemy import SQLAlchemy
 from itsdangerous import URLSafeTimedSerializer
 
 
-version = "0.1.3"
-build = "pending..."
 
 app = Flask(__name__)
 # CORS(app, resources={r'/*': {"origins": ["https://localhost:3000",
@@ -22,8 +20,11 @@ if app.config["ENV"] == "production":
 elif app.config["ENV"] == "development":
     app.config.from_object("config.DevelopmentConfig")
 
+
+version = "0.1.3"
+build = app.config["HEROKU_RELEASE_VERSION"]
+
 db = SQLAlchemy(app)
-print(app.config)
 db.create_all()
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
