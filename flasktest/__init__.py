@@ -33,10 +33,9 @@ jwt = JWTManager(app)
 print(app.config)
 
 
+version = "0.1.3"
+build = app.config["HEROKU_RELEASE_VERSION"]
 from flasktest.users.routes import users
 from flasktest.entries.routes import entries
 app.register_blueprint(users)
 app.register_blueprint(entries)
-
-version = "0.1.3"
-build = app.config["HEROKU_RELEASE_VERSION"]
