@@ -56,6 +56,7 @@ class TestingConfig(Config):
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_API_KEY = os.environ.get('MAIL_API_KEY')
     # REMEMBER_COOKIE_DURATION = timedelta(days=7)
     # REMEMBER_COOKIE_SECURE = True
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
