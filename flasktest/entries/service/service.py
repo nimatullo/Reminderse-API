@@ -46,7 +46,8 @@ class EntryService:
 
     def pause_link(self, link_id):
         paused_date = date.today() - timedelta(days=1)
-        if self.link_repo.update_date(link_id, paused_date):
+        link = self.link_repo.get_link(link_id)
+        if self.link_repo.update_date(link, paused_date):
             return make_response(jsonify({
                 "message": "Link paused"
             }), 200)
@@ -68,7 +69,8 @@ class EntryService:
 
     def resume_link(self, link_id):
         resume_date = date.today() + timedelta(days=3)
-        if self.link_repo.update_date(link_id, resume_date):
+        link = self.link_repo.get_link(link_id)
+        if self.link_repo.update_date(link, resume_date):
             return make_response(jsonify({
                 "message": "Link paused"
             }), 200)
@@ -96,7 +98,7 @@ class EntryService:
         else:
             add_new_category(category_title)
             category_id = get_category_by_title(category_title).id
-            if category_id < 0:
+            if not category_id:
                 return make_response(jsonify({
                     "message": "Server error"
                 }), 500)
@@ -126,6 +128,7 @@ class EntryService:
                 "message": "Server error"
             }), 500)
 
+    # DISGUSTING UPDATE METHOD. UPDATE NEEDED
     def update_link(self, link_id, user_id, new_title, new_url, new_category, new_date):
         link = self.link_repo.get_link(link_id)
         if not link:
@@ -137,6 +140,18 @@ class EntryService:
             return make_response(jsonify({
                 "message": "Unauthorized"
             }), 401)
+            
+        self.link_repo.update_entry_title(link, new_title)
+        self.link_repo.update_url(link, new_url)
+        self.link_repo.update_date(link, new_date)
+        category = get_category_by_title(new_category)
+        if not category:
+            category = add_new_category(new_category)
+        self.link_repo.update_category(link, category.id)
+        return make_response(jsonify({
+            "message": "Text updated"
+        }), 200)
+        
 
     def update_text(self, text_id, user_id, new_title, new_content, new_category, new_date):
         text = self.text_repo.get_text(text_id)

@@ -7,16 +7,23 @@ from flasktest import db
 
 def save(data=None):
     try:
-        if data:
-            db.session.add(data)
         db.session.commit()
+        return True
     except:
         db.session.rollback()
         return False
-    finally:
-        db.session.close()
 
-    return True
+
+def add(data):
+    try:
+        db.session.add(data)
+        db.session.commit()
+        db.session.refresh(data)
+        return data
+    except Exception as ex:
+        print(f"Error saving data! {ex}")
+    
+    return None
 
 
 def category_exists(category_title) -> Category:
@@ -37,7 +44,7 @@ def get_category_by_title(title) -> Category:
 def add_new_category(title) -> int:
     category = Category(title=title)
     try:
-        save(category)
+        return add(category)
     except Exception:
         return -1
 
@@ -127,22 +134,20 @@ class LinkRepo:
             .filter_by(user_id=current_user.id)\
             .first()
 
-    def update_entry_title(self, link_id, entry_title):
-        link = self.get_link(link_id)
+    def update_entry_title(self, link, entry_title):
+        print(f"Updating entry {link.entry_title} to {entry_title}")
         link.entry_title = entry_title
         return save()
 
-    def update_url(self, link_id, url):
-        link = self.get_link(link_id)
+    def update_url(self, link, url):
+        print(f"Updating URL from {link.url} to {url}")
         link.url = url
         return save()
 
-    def update_category(self, link_id, category_id):
-        link = self.get_link(link_id)
+    def update_category(self, link, category_id):
         link.category_id = category_id
         return save()
 
-    def update_date(self, link_id, date):
-        link = self.get_link(link_id)
+    def update_date(self, link: Links, date):
         link.date_of_next_send = date
         return save()

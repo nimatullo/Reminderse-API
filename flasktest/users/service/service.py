@@ -14,9 +14,9 @@ class UserService:
 
     def signup(self, username, email, password):
         if self.repo.username_exists(username):
-            return make_response(jsonify({"message": "Username exists"}), 400)
+            return make_response(jsonify({"message": "Username already exists"}), 400)
         if self.repo.email_exists(email):
-            return make_response(jsonify({"message": "Email exists"}), 400)
+            return make_response(jsonify({"message": "Email already exists"}), 400)
 
         hashed_password = bcrypt.generate_password_hash(
             password).decode("utf8")

@@ -7,7 +7,7 @@ from socketlabs.injectionapi.message.emailaddress import EmailAddress
 from flasktest import app
 
 serverId = app.config["MAIL_SERVER_ID"]
-injectionApiKey = os.environ['MAIL_API_KEY']
+injectionApiKey = app.config["MAIL_API_KEY"]
 
 client = SocketLabsClient(serverId, injectionApiKey)
 
