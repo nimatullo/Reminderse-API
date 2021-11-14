@@ -248,3 +248,5 @@ Temporary Items
 # thumbnail cache on Windows
 
 # profiling data
+#
+.idea/

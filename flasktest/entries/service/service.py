@@ -140,7 +140,7 @@ class EntryService:
             return make_response(jsonify({
                 "message": "Unauthorized"
             }), 401)
-            
+
         self.link_repo.update_entry_title(link, new_title)
         self.link_repo.update_url(link, new_url)
         self.link_repo.update_date(link, new_date)
@@ -151,7 +151,6 @@ class EntryService:
         return make_response(jsonify({
             "message": "Text updated"
         }), 200)
-        
 
     def update_text(self, text_id, user_id, new_title, new_content, new_category, new_date):
         text = self.text_repo.get_text(text_id)
