@@ -19,11 +19,17 @@ class EntryService:
 
         category = get_category_by_id(link.category_id)
 
+        if (category):
+            category = category.title
+        else:
+            category = ""
+       
+
         return make_response(jsonify({
             "id": link.id,
             "entry_title": link.entry_title,
             "url": link.url,
-            "category": category.title,
+            "category": category,
             "date": link.date_of_next_send
         }), 200)
 
@@ -92,10 +98,8 @@ class EntryService:
 
     def add_link(self, entry_title, url, category_title):
         validated_url = self.validate_url(url)
-        category_id = 0
-        if category_exists(category_title):
-            category_id = get_category_by_title(category_title).id
-        else:
+        category_id = category_exists(category_title).id
+        if not category_id:
             add_new_category(category_title)
             category_id = get_category_by_title(category_title).id
             if not category_id:

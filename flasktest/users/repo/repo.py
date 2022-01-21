@@ -13,6 +13,7 @@ class UserRepository():
             db.session.rollback()
             return False
         finally:
+            print("Commiting save!")
             db.session.close()
 
         return True
@@ -36,28 +37,29 @@ class UserRepository():
             return False
 
     def get_userinfo_id(self, user_id) -> Users:
-        return Users.query.filter_by(id=user_id).first()
+        user = Users.query.filter_by(id=user_id).first()
+        return user
 
     def get_userinfo_email(self, email) -> Users:
         return Users.query.filter_by(email=email).first()
 
     def change_username(self, user_id, new_username):
-        user = self.get_userinfo_id(user_id)
+        user = Users.query.filter_by(id=user_id).first()
         user.username = new_username
         return self.save()
 
     def change_email(self, user_id, email):
-        user = self.get_userinfo_id(user_id)
+        user = Users.query.filter_by(id=user_id).first()
         user.email = email
         user.email_confirmed = False
         return self.save()
 
     def change_password(self, id, password):
-        user = self.get_userinfo_id(id)
+        user = Users.query.filter_by(id=id).first()
         user.password = password
         return self.save()
 
     def set_email_to_confirmed(self, email) -> bool:
-        user = self.get_userinfo_email(email)
+        user = Users.query.filter_by(email=email).first()
         user.email_confirmed = True
         return self.save()

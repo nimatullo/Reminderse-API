@@ -48,8 +48,8 @@ class UserService:
             )
             refresh_token = create_refresh_token(identity=user.id)
             response = jsonify({
-                "message": f"Welcome {user.username}",
                 "username": user.username,
+                "email": user.email,
                 "id": user.id,
             })
             set_access_cookies(response, access_token)

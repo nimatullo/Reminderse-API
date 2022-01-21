@@ -151,7 +151,7 @@ def unsub():
     }), 200
 
 
-@users.route("/api/current+user", methods=["GET"])
+@users.route("/api/current-user", methods=["GET"])
 @jwt_required
 def who_is_logged_in():
     CURRENT_USER = service.get_current_user()

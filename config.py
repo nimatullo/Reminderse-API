@@ -7,6 +7,8 @@ class Config(object):
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
+    SWAGGER_URL = '/api/docs'
+    API_URL = '/static/swagger.json'
 
 
 class ProductionConfig(Config):
