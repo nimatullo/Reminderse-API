@@ -100,6 +100,7 @@ class EntryService:
     def add_link(self, entry_title, url, category_title):
         validated_url = self.validate_url(url)
         category = category_exists(category_title)
+        category_id = 0
         if not category:
             category = add_new_category(category_title)
             category_id = category.id
@@ -118,7 +119,7 @@ class EntryService:
 
     def add_text(self, entry_title, content, category_title):
         category = category_exists(category_title)
-        category_id = 0;
+        category_id = 0
         if not category:
             category = add_new_category(category_title)
             category_id = category.id
