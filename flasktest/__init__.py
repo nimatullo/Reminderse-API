@@ -16,7 +16,7 @@ app = Flask(__name__)
 # CORS(app, resources={r'/api/*': {
 #     "origins":  ["https://618ec617dcd64c000799a047--vigorous-varahamihira-d00b87.netlify.app"]
 #     }}, supports_credentials=True)
-cors = CORS(app, origins=["https://61eaeb755caa0000072e645d--vigorous-varahamihira-d00b87.netlify.app/",
+cors = CORS(app, origins=["https://61eaeb755caa0000072e645d--vigorous-varahamihira-d00b87.netlify.app",
                           "https://www.reminderse.com"
                           ],
             headers=['Content-Type'],
