@@ -31,7 +31,7 @@ elif app.config["ENV"] == "development":
 elif app.config["ENV"] == "testing":
     app.config.from_object("config.TestingConfig")
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, engine_options={'pool_pre_ping': True})
 db.create_all()
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
