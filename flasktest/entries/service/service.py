@@ -1,3 +1,4 @@
+from nis import cat
 from flask import json, make_response, jsonify
 from sqlalchemy.sql.expression import text
 from flasktest.entries.repo.repo import LinkRepo, TextRepo, get_category_by_id
@@ -98,10 +99,10 @@ class EntryService:
 
     def add_link(self, entry_title, url, category_title):
         validated_url = self.validate_url(url)
-        category_id = category_exists(category_title).id
-        if not category_id:
+        category = category_exists(category_title)
+        if not category:
             add_new_category(category_title)
-            category_id = get_category_by_title(category_title).id
+            category_id = category.id
             if not category_id:
                 return make_response(jsonify({
                     "message": "Server error"
@@ -116,13 +117,11 @@ class EntryService:
             }), 500)
 
     def add_text(self, entry_title, content, category_title):
-        category_id = 0
-        if category_title:
-            if category_exists(category_title):
-                category_id = get_category_by_title(category_title).id
-            else:
-                add_new_category(category_title)
-                category_id = get_category_by_title(category_title).id
+        category = category_exists(category_title)
+        category_id = 0;
+        if not category:
+            category = add_new_category(category_title)
+            category_id = category.id
         if self.text_repo.add(entry_title, content, category_id):
             return make_response(jsonify({
                 "message": "Text entry created"
