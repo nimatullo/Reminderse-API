@@ -101,7 +101,7 @@ class EntryService:
         validated_url = self.validate_url(url)
         category = category_exists(category_title)
         if not category:
-            add_new_category(category_title)
+            category = add_new_category(category_title)
             category_id = category.id
             if not category_id:
                 return make_response(jsonify({
