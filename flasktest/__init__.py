@@ -11,7 +11,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 from flask_swagger import swagger
 
 app = Flask(__name__)
-cors = CORS(app, origins=["https://61eaeb755caa0000072e645d--vigorous-varahamihira-d00b87.netlify.app",
+cors = CORS(app, origins=["https://.*--vigorous-varahamihira-d00b87.netlify.app",
                           "https://www.reminderse.com"
                           ],
             headers=['Content-Type'],
