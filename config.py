@@ -16,12 +16,12 @@ class ProductionConfig(Config):
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     MAIL_SERVER = 'smtp.zoho.com'
-    MAIL_SERVER_ID = os.environ.get("MAIL_SERVER_ID")
+    MAIL_SERVER_ID = int(os.environ.get("MAIL_SERVER_ID"))
     MAIL_PORT = 465
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    MAIL_API_KEY = int(os.environ.get("MAIL_API_KEY"))
+    MAIL_API_KEY = os.environ.get("MAIL_API_KEY")
     # REMEMBER_COOKIE_DURATION = timedelta(days=7)
     # REMEMBER_COOKIE_SECURE = True
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
@@ -53,12 +53,12 @@ class TestingConfig(Config):
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     MAIL_SERVER = 'smtp.zoho.com'
-    MAIL_SERVER_ID = os.environ.get("MAIL_SERVER_ID")
+    MAIL_SERVER_ID = int(os.environ.get("MAIL_SERVER_ID"))
     MAIL_PORT = 465
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    MAIL_API_KEY = int(os.environ.get('MAIL_API_KEY'))
+    MAIL_API_KEY = os.environ.get('MAIL_API_KEY')
     # REMEMBER_COOKIE_DURATION = timedelta(days=7)
     # REMEMBER_COOKIE_SECURE = True
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
