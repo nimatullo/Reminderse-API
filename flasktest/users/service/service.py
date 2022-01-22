@@ -122,7 +122,7 @@ class UserService:
                 '''
         try:
             send_confirmation(email, html_mid)
-            return make_response({"message": "Email sent successfully"}, 200)
+            return make_response({"message": "Email sent successfully"}, 201)
         except Exception as e:
             return make_response(jsonify({
                 "message": "Server error",

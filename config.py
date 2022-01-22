@@ -21,7 +21,7 @@ class ProductionConfig(Config):
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    MAIL_API_KEY = os.environ.get("MAIL_API_KEY")
+    MAIL_API_KEY = int(os.environ.get("MAIL_API_KEY"))
     # REMEMBER_COOKIE_DURATION = timedelta(days=7)
     # REMEMBER_COOKIE_SECURE = True
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
@@ -36,12 +36,12 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     SECRET_KEY = "NIMATULLO_SECRET"
-    MAIL_SERVER_ID = "zoho"
-    MAIL_API_KEY = "abcefghij"
+    MAIL_SERVER_ID = 7721
+    MAIL_API_KEY = "fake_key"
     MAIL_PASSWORD = "password"
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = "postgresql://puffer:puffer@localhost:5432/reminderse"
-    HEROKU_BUILD  = "local"
+    HEROKU_BUILD = "local"
     JWT_TOKEN_LOCATION = 'cookies'
     JWT_ACCESS_COOKIE_PATH = '/api/'
     JWT_REFRESH_COOKIE_PATH = '/token/refresh'
@@ -58,7 +58,7 @@ class TestingConfig(Config):
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    MAIL_API_KEY = os.environ.get('MAIL_API_KEY')
+    MAIL_API_KEY = int(os.environ.get('MAIL_API_KEY'))
     # REMEMBER_COOKIE_DURATION = timedelta(days=7)
     # REMEMBER_COOKIE_SECURE = True
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
