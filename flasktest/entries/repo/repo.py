@@ -22,7 +22,7 @@ def add(data):
         return data
     except Exception as ex:
         print(f"Error saving data! {ex}")
-    
+
     return None
 
 
@@ -53,10 +53,15 @@ class TextRepo:
     def __init__(self) -> None:
         self.user_service = UserService()
 
-    def add(self, title, content, category_id):
-        text = Text(entry_title=title, text_content=content,
-                    users=self.user_service.get_current_user(),
-                    category_id=category_id)
+    def add(self, title, content, category_id=None):
+        if category_id == None:
+            text = Text(entry_title=title, text_content=content,
+                        users=self.user_service.get_current_user(),
+                        )
+        else:
+            text = Text(entry_title=title, text_content=content,
+                        users=self.user_service.get_current_user(),
+                        category_id=category_id)
         return save(text)
 
     def get_all_texts_for_user(self, user_id):
@@ -106,10 +111,13 @@ class LinkRepo:
     def __init__(self) -> None:
         self.user_service = UserService()
 
-    def add(self, title, url, category_id):
-        link = Links(entry_title=title, url=url,
-                     users=self.user_service.get_current_user(),
-                     category_id=category_id)
+    def add(self, title, url, category_id=None):
+        if category_id == None:
+            link = Links(entry_title=title, url=url,
+                         users=self.user_service.get_current_user())
+        else:
+            link = Links(entry_title=title, url=url,
+                         category_id=category_id)
         return save(link)
 
     def get_all_links_for_user(self, user_id):

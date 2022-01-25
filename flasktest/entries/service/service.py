@@ -24,7 +24,6 @@ class EntryService:
             category = category.title
         else:
             category = ""
-       
 
         return make_response(jsonify({
             "id": link.id,
@@ -108,14 +107,23 @@ class EntryService:
                 return make_response(jsonify({
                     "message": "Server error"
                 }), 500)
-        if self.link_repo.add(entry_title, validated_url, category_id):
-            return make_response(jsonify({
-                "message": "Link entry created"
-            }), 201)
+            if self.link_repo.add(entry_title, validated_url, category_id):
+                return make_response(jsonify({
+                    "message": "Link entry created"
+                }), 201)
+            else:
+                return make_response(jsonify({
+                    "message": "Server error"
+                }), 500)
         else:
-            return make_response(jsonify({
-                "message": "Server error"
-            }), 500)
+            if self.link_repo.add(entry_title, validated_url):
+                return make_response(jsonify({
+                    "message": "Link entry created"
+                }), 201)
+            else:
+                return make_response(jsonify({
+                    "message": "Server error"
+                }), 500)
 
     def add_text(self, entry_title, content, category_title):
         category = category_exists(category_title)
@@ -123,14 +131,23 @@ class EntryService:
         if not category:
             category = add_new_category(category_title)
             category_id = category.id
-        if self.text_repo.add(entry_title, content, category_id):
-            return make_response(jsonify({
-                "message": "Text entry created"
-            }), 201)
+            if self.text_repo.add(entry_title, content, category_id):
+                return make_response(jsonify({
+                    "message": "Text entry created"
+                }), 201)
+            else:
+                return make_response(jsonify({
+                    "message": "Server error"
+                }), 500)
         else:
-            return make_response(jsonify({
-                "message": "Server error"
-            }), 500)
+            if self.text_repo.add(entry_title, content):
+                return make_response(jsonify({
+                    "message": "Text entry created"
+                }), 201)
+            else:
+                return make_response(jsonify({
+                    "message": "Server error"
+                }), 500)
 
     # DISGUSTING UPDATE METHOD. UPDATE NEEDED
     def update_link(self, link_id, user_id, new_title, new_url, new_category, new_date):
