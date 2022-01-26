@@ -1,5 +1,4 @@
 from nis import cat
-from turtle import title
 from flask import json, make_response, jsonify
 from sqlalchemy.sql.expression import text
 from flasktest.entries.repo.repo import LinkRepo, TextRepo, get_category_by_id
@@ -141,7 +140,7 @@ class EntryService:
             if not category:
                 category = add_new_category(category_title)
             
-            if self.text_repo.add(title, content, category.id):
+            if self.text_repo.add(entry_title, content, category.id):
                 return make_response(jsonify({
                     "message": "Text entry created"
                 }), 201)
@@ -150,7 +149,7 @@ class EntryService:
                     "message": "Server error"
                 }), 500)
         else:
-            if self.text_repo.add(title, content):
+            if self.text_repo.add(entry_title, content):
                 return make_response(jsonify({
                     "message": "Text entry created"
                 }), 201)
