@@ -5,7 +5,7 @@ from flasktest.models import Category, Links, Text
 from flasktest import db
 
 
-def save(data=None):
+def save():
     try:
         db.session.commit()
         return True
@@ -112,13 +112,15 @@ class LinkRepo:
         self.user_service = UserService()
 
     def add(self, title, url, category_id=None):
+        current_user = self.user_service.get_current_user()
         if category_id == None:
             link = Links(entry_title=title, url=url,
-                         users=self.user_service.get_current_user())
+                         users=current_user)
         else:
             link = Links(entry_title=title, url=url,
-                         category_id=category_id)
-        return save(link)
+                         category_id=category_id,
+                         users=current_user)
+        return add(link)
 
     def get_all_links_for_user(self, user_id):
         return Links.query.filter_by(user_id=user_id).all()

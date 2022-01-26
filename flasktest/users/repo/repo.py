@@ -14,7 +14,6 @@ class UserRepository():
             return False
         finally:
             print("Commiting save!")
-            db.session.close()
 
         return True
 
