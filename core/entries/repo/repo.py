@@ -1,8 +1,8 @@
 from datetime import date, timedelta
 
-from flasktest.users.service.service import UserService
-from flasktest.models import Category, Links, Text
-from flasktest import db
+from core.users.service.service import UserService
+from core.models import Category, Links, Text
+from core import db
 
 
 def save():
@@ -53,16 +53,19 @@ class TextRepo:
     def __init__(self) -> None:
         self.user_service = UserService()
 
-    def add(self, title, content, category_id=None):
+    def add(self, title, content, category_id=None, date_of_next_send=None):
         if category_id == None:
             text = Text(entry_title=title, text_content=content,
                         users=self.user_service.get_current_user(),
+                        date_of_next_send=date_of_next_send
                         )
         else:
             text = Text(entry_title=title, text_content=content,
                         users=self.user_service.get_current_user(),
-                        category_id=category_id)
-        return save(text)
+                        category_id=category_id,
+                        date_of_next_send=date_of_next_send
+                        )
+        return add(text)
 
     def get_all_texts_for_user(self, user_id):
         return Text.query.filter_by(user_id=user_id)
@@ -111,15 +114,16 @@ class LinkRepo:
     def __init__(self) -> None:
         self.user_service = UserService()
 
-    def add(self, title, url, category_id=None):
+    def add(self, title, url, category_id=None, date_of_next_send=None):
         current_user = self.user_service.get_current_user()
         if category_id == None:
             link = Links(entry_title=title, url=url,
-                         users=current_user)
+                         users=current_user, date_of_next_send=date_of_next_send)
         else:
             link = Links(entry_title=title, url=url,
                          category_id=category_id,
-                         users=current_user)
+                         users=current_user,
+                         date_of_next_send=date_of_next_send)
         return add(link)
 
     def get_all_links_for_user(self, user_id):

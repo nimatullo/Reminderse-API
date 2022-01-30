@@ -1,14 +1,14 @@
-from flasktest.entries.service.service import EntryService
+from core.entries.service.service import EntryService
 import uuid
-from datetime import timedelta, date
+from datetime import datetime, timedelta, date
 
 from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from flasktest import daily_email
-from flasktest import db
-from flasktest.users.service.service import UserService
-from flasktest.models import Links, Category, Text
+from core import daily_email
+from core import db
+from core.users.service.service import UserService
+from core.models import Links, Category, Text
 
 entries = Blueprint('entries', __name__)
 service = EntryService()
@@ -22,18 +22,27 @@ def add_link():
         entry_title = request.json.get('entry_title')
         url = request.json.get('url')
         category = request.json.get('category')
+        date_of_next_send = request.json.get('date_of_next_send')
+        if date_of_next_send:
+            if datetime.strptime(date_of_next_send, '%Y-%m-%d') < datetime.now():
+                return make_response(jsonify({"message": "Invalid date"}), 400)
 
-        return service.add_link(entry_title, url, category)
+        return service.add_link(entry_title, url, category, date_of_next_send)
 
 
 @entries.route("/api/text/add", methods=["POST"])
 @jwt_required
 def add_text():
-    entry_title = request.json.get('entry_title')
-    text_content = request.json.get('text_content')
-    category = request.json.get('category')
+    if request.is_json:
+        entry_title = request.json.get('entry_title')
+        text_content = request.json.get('text_content')
+        category = request.json.get('category')
+        date_of_next_send = request.json.get('date_of_next_send')
+        if date_of_next_send:
+            if datetime.strptime(date_of_next_send, '%Y-%m-%d') < datetime.now():
+                return make_response(jsonify({"message": "Invalid date"}), 400)
 
-    return service.add_text(entry_title, text_content, category)
+        return service.add_text(entry_title, text_content, category, date_of_next_send)
 
 
 @entries.route('/api/link/list', methods=['GET'])

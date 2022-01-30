@@ -3,10 +3,10 @@ from datetime import date, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from flasktest import db, app
-from flasktest.models import Users, Links, Text
+from core import db, app
+from core.models import Users, Links, Text
 
-from flasktest.email import send_links
+from core.email import send_links
 
 import os
 

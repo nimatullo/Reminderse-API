@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
+from email.policy import default
 
 import sqlalchemy
 from flask_login import UserMixin
 from sqlalchemy.dialects.postgresql import UUID
 
-from flasktest import db, login_manager
+from core import db, login_manager
 
 
 @login_manager.user_loader
@@ -19,6 +20,7 @@ class Users(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
+    interval = db.Column(db.Integer, default=3)
     email_confirmed = db.Column(db.Boolean(), default=False)
     links = db.relationship('Links', backref=db.backref(
         'users'), lazy='dynamic', passive_deletes=True)

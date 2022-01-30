@@ -1,3 +1,3 @@
-from flasktest import db
+from core import db
 
 db.create_all()
