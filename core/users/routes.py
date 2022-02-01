@@ -1,4 +1,4 @@
-from core.users.service.service import UserService
+from core.users.service import UserService
 
 from flask import Blueprint
 from flask import request, jsonify, make_response

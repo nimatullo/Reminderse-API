@@ -1,14 +1,11 @@
-from core.entries.service.service import EntryService
-import uuid
-from datetime import datetime, timedelta, date
+from core.entries.service import EntryService
+from datetime import datetime
 
 from flask import Blueprint, request, jsonify, make_response
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 from core import daily_email
-from core import db
-from core.users.service.service import UserService
-from core.models import Links, Category, Text
+from core.users.service import UserService
 
 entries = Blueprint('entries', __name__)
 service = EntryService()
@@ -42,7 +39,7 @@ def add_text():
             if datetime.strptime(date_of_next_send, '%Y-%m-%d') < datetime.now():
                 return make_response(jsonify({"message": "Invalid date"}), 400)
 
-        return service.add_text(entry_title, text_content, category, date_of_next_send)
+        return service.add_text(entry_title=entry_title, content=text_content, category_title=category, date_of_next_send=date_of_next_send)
 
 
 @entries.route('/api/link/list', methods=['GET'])

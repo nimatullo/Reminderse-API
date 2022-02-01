@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from email.policy import default
 
 import sqlalchemy
 from flask_login import UserMixin
@@ -44,14 +43,23 @@ class Links(db.Model):
                    server_default=sqlalchemy.text("uuid_generate_v4()"))
     entry_title = db.Column(db.String(100), nullable=False)
     url = db.Column(db.String(300), nullable=False)
-    date = get_new_date()
-    date_of_next_send = db.Column(db.Date, nullable=False, default=date)
     user_id = db.Column(UUID, db.ForeignKey(
         'users.id', ondelete='CASCADE'), nullable=False)
+    date = get_new_date()
+    date_of_next_send = db.Column(db.Date, nullable=False, default=date)
     category_id = db.Column(UUID, db.ForeignKey('category.id'))
     category = db.relationship(
         'Category', cascade="all,delete", backref=db.backref('links', lazy='dynamic'))
-
+    
+    def __init__(self, entry_title, url, users, category=None, date=None) -> None:
+        self.entry_title = entry_title
+        self.url = url
+        self.user_id = users.id
+        self.category_id = category.id if category else None
+        self.date_of_next_send = date if date else datetime.now() + timedelta(days=users.interval)
+    
+    
+        
     def __repr__(self):
         return "Link('{0}', '{1}',)".format(self.entry_title, self.date_of_next_send)
 
@@ -69,6 +77,13 @@ class Text(db.Model):
     category_id = db.Column(UUID, db.ForeignKey('category.id'))
     category = db.relationship(
         'Category', cascade="all,delete", backref=db.backref('text', lazy='dynamic'))
+
+    def __init__(self, entry_title, text_content, users, category=None, date=None) -> None:
+        self.entry_title = entry_title
+        self.text_content = text_content
+        self.user_id = users.id
+        self.category_id = category.id if category else None
+        self.date_of_next_send = date if date else datetime.now() + timedelta(days=users.interval)
 
     def __repr__(self):
         return "Text('{0}', '{1}',)".format(self.entry_title, self.text_content)
