@@ -1,5 +1,3 @@
-from datetime import timedelta
-from pytz import timezone
 from core.users.service import UserService
 
 from flask import Blueprint
