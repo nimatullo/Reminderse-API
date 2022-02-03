@@ -22,16 +22,14 @@ class ProductionConfig(Config):
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_API_KEY = os.environ.get("MAIL_API_KEY")
-    # REMEMBER_COOKIE_DURATION = timedelta(days=7)
-    # REMEMBER_COOKIE_SECURE = True
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
     JWT_TOKEN_LOCATION = 'cookies'
     JWT_ACCESS_COOKIE_PATH = '/api/'
     JWT_REFRESH_COOKIE_PATH = '/token/refresh'
     JWT_CSRF_IN_COOKIES = True
-    JWT_COOKIE_SAMESITE = None
-    # JWT_COOKIE_SECURE = True
-    JWT_COOKIE_CSRF_PROTECT = False
+    JWT_COOKIE_SAMESITE = "None"
+    JWT_COOKIE_SECURE = True
+    JWT_COOKIE_CSRF_PROTECT = True
 
 
 class DevelopmentConfig(Config):
@@ -45,6 +43,10 @@ class DevelopmentConfig(Config):
     JWT_TOKEN_LOCATION = 'cookies'
     JWT_ACCESS_COOKIE_PATH = '/api/'
     JWT_REFRESH_COOKIE_PATH = '/token/refresh'
+    JWT_CSRF_IN_COOKIES = False
+    JWT_COOKIE_SAMESITE = "None"
+    JWT_COOKIE_SECURE = False
+    JWT_COOKIE_CSRF_PROTECT = False
 
 
 class TestingConfig(Config):
@@ -59,8 +61,6 @@ class TestingConfig(Config):
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_API_KEY = os.environ.get('MAIL_API_KEY')
-    # REMEMBER_COOKIE_DURATION = timedelta(days=7)
-    # REMEMBER_COOKIE_SECURE = True
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
     JWT_TOKEN_LOCATION = 'cookies'
     JWT_ACCESS_COOKIE_PATH = '/api/'

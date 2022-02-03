@@ -1,3 +1,5 @@
+from datetime import timedelta
+from pytz import timezone
 from core.users.service import UserService
 
 from flask import Blueprint
@@ -5,13 +7,17 @@ from flask import request, jsonify, make_response
 from flask_jwt_extended import jwt_refresh_token_required, get_jwt_identity, jwt_required, unset_jwt_cookies
 from flask_login import logout_user
 
-from core import db, ts, version, build
+from core import db, ts, version, build, app
 from core.models import Users, Links, Text
 from core.users import service
 
 users = Blueprint('users', __name__)
 service = UserService()
 
+@app.after_request
+def refresh_expiring_jwts(response):
+    return response
+    # return service.refresh_expiring_token(response)
 
 @users.route('/api/version', methods=['GET'])
 def version_number():

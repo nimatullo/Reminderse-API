@@ -1,7 +1,5 @@
 import smtplib
 from datetime import date, timedelta
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 from core import db, app
 from core.models import Users, Links, Text
@@ -40,16 +38,16 @@ def send_to_each_user():
             continue
 
         users_sent_to.append(user)
-        move_date(links)
-        move_date(text)
+        move_date(links, user.interval)
+        move_date(text, user.interval)
         build_email(user.email, links, text)
     return users_sent_to
 
 
-def move_date(entries):
+def move_date(entries, interval):
     for item in entries:
         print("Moving date for entry")
-        date = item.date_of_next_send + timedelta(days=int(3))
+        date = item.date_of_next_send + timedelta(days=interval)
         item.date_of_next_send = date
         app.logger.info("New date is: " + date.strftime("%m/%d/%y"))
         db.session.commit()

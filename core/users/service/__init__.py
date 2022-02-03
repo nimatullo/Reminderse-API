@@ -1,11 +1,11 @@
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from os import access
 from core.email import send_confirmation
 from core.users.repo import UserRepository
 from flask import make_response, jsonify
 from core import bcrypt, ts
-from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, \
-    jwt_refresh_token_required, get_jwt_identity, jwt_required, unset_jwt_cookies
+from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, jwt_refresh_token_required, get_jwt_identity
+from flask_jwt_extended import get_raw_jwt
 
 
 class UserService:
@@ -72,6 +72,18 @@ class UserService:
         })
         set_access_cookies(response, access_token)
         return make_response(response, 200)
+    
+    def refresh_expiring_token(self, response):
+        try:
+            exp_timestamp = get_raw_jwt()["exp"]
+            now = datetime.now(timezone.utc)
+            target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+            if target_timestamp > exp_timestamp:
+                access_token = create_access_token(identity=get_jwt_identity())
+                set_access_cookies(response, access_token)
+            return response
+        except (RuntimeError, KeyError):
+            return response
 
     def update_username(self, new_username, current_user):
         if self.repo.username_exists(new_username):

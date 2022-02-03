@@ -44,7 +44,7 @@ class EntryService:
             "id": text.id,
             "entry_title": text.entry_title,
             "text_content": text.text_content,
-            "category": category.title,
+            "category": category.title if category else "",
             "date": text.date_of_next_send
         }), 200)
 
