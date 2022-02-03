@@ -29,6 +29,7 @@ class ProductionConfig(Config):
     JWT_CSRF_IN_COOKIES = True
     JWT_COOKIE_SAMESITE = "None"
     JWT_COOKIE_SECURE = True
+    JWT_COOKIE_DOMAIN = ".reminderse.com"
     JWT_COOKIE_CSRF_PROTECT = True
 
 
@@ -43,10 +44,10 @@ class DevelopmentConfig(Config):
     JWT_TOKEN_LOCATION = 'cookies'
     JWT_ACCESS_COOKIE_PATH = '/api/'
     JWT_REFRESH_COOKIE_PATH = '/token/refresh'
-    JWT_CSRF_IN_COOKIES = False
+    JWT_CSRF_IN_COOKIES = True
     JWT_COOKIE_SAMESITE = "None"
-    JWT_COOKIE_SECURE = False
-    JWT_COOKIE_CSRF_PROTECT = False
+    JWT_COOKIE_SECURE = True
+    JWT_COOKIE_CSRF_PROTECT = True
 
 
 class TestingConfig(Config):
