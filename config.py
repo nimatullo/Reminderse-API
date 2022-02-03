@@ -68,4 +68,4 @@ class TestingConfig(Config):
     JWT_CSRF_IN_COOKIES = True
     JWT_COOKIE_SAMESITE = "None"
     JWT_COOKIE_SECURE = True
-    JWT_COOKIE_CSRF_PROTECT = False
+    JWT_COOKIE_CSRF_PROTECT = True
