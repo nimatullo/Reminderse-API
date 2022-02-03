@@ -1,3 +1,4 @@
+from distutils.command.config import config
 from flask import Flask
 from flask.json import jsonify
 from flask_bcrypt import Bcrypt
@@ -12,8 +13,7 @@ from flask_swagger import swagger
 from flask_migrate import Migrate
 
 app = Flask(__name__)
-cors = CORS(app, origins=["https://.*--vigorous-varahamihira-d00b87.netlify.app",
-                          "https://www.reminderse.com"
+cors = CORS(app, origins=["https://.*--vigorous-varahamihira-d00b87.netlify.app" if app.config["ENV"] == "testing" else "https://www.reminderse.com"
                           ],
             headers=['Content-Type'],
             expose_headers=['Access-Control-Allow-Origin'],
