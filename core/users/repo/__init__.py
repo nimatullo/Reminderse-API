@@ -1,5 +1,5 @@
-from flasktest.models import Users
-from flasktest import db
+from core.models import Users
+from core import db
 
 
 class UserRepository():
@@ -56,6 +56,11 @@ class UserRepository():
     def change_password(self, id, password):
         user = Users.query.filter_by(id=id).first()
         user.password = password
+        return self.save()
+
+    def change_interval(self, interval, id):
+        user = Users.query.filter_by(id=id).first()
+        user.interval = interval
         return self.save()
 
     def set_email_to_confirmed(self, email) -> bool:

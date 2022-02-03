@@ -1,8 +1,6 @@
-from nis import cat
 from flask import json, make_response, jsonify
-from sqlalchemy.sql.expression import text
-from flasktest.entries.repo.repo import LinkRepo, TextRepo, get_category_by_id
-from flasktest.entries.repo.repo import get_category_by_id, get_category_by_title, category_exists, add_new_category
+from core.entries.repo import LinkRepo, TextRepo, get_category_by_id
+from core.entries.repo import get_category_by_id, get_category_by_title, category_exists, add_new_category
 from datetime import date, timedelta
 
 
@@ -46,7 +44,7 @@ class EntryService:
             "id": text.id,
             "entry_title": text.entry_title,
             "text_content": text.text_content,
-            "category": category.title,
+            "category": category.title if category else "",
             "date": text.date_of_next_send
         }), 200)
 
@@ -96,7 +94,7 @@ class EntryService:
                 "message": "Text does not exists"
             }), 404)
 
-    def add_link(self, entry_title, url, category_title):
+    def add_link(self, entry_title, url, category_title, date_of_next_send=None):
         """
         Cases:
             1. Category is provided
@@ -115,7 +113,7 @@ class EntryService:
             if not category:
                 category = add_new_category(category_title)
 
-            if self.link_repo.add(entry_title, validated_url, category.id):
+            if self.link_repo.add(title=entry_title, url=validated_url, category=category, date=date_of_next_send):
                 return make_response(jsonify({
                     "message": "Link entry created"
                 }), 201)
@@ -124,7 +122,7 @@ class EntryService:
                     "message": "Server error"
                 }), 500)
         else:
-            if self.link_repo.add(entry_title, validated_url):
+            if self.link_repo.add(title=entry_title, url=validated_url, date=date_of_next_send):
                 return make_response(jsonify({
                     "message": "Link entry created"
                 }), 201)
@@ -132,15 +130,14 @@ class EntryService:
                 return make_response(jsonify({
                     "message": "Server error"
                 }), 500)
-            
 
-    def add_text(self, entry_title, content, category_title):
+    def add_text(self, entry_title, content, category_title, date_of_next_send=None):
         if category_title:
             category = category_exists(category_title)
             if not category:
                 category = add_new_category(category_title)
-            
-            if self.text_repo.add(entry_title, content, category.id):
+
+            if self.text_repo.add(entry_title=entry_title, content=content, category=category, date=date_of_next_send):
                 return make_response(jsonify({
                     "message": "Text entry created"
                 }), 201)
@@ -149,7 +146,7 @@ class EntryService:
                     "message": "Server error"
                 }), 500)
         else:
-            if self.text_repo.add(entry_title, content):
+            if self.text_repo.add(title=entry_title, content=content, date=date_of_next_send):
                 return make_response(jsonify({
                     "message": "Text entry created"
                 }), 201)
@@ -157,7 +154,7 @@ class EntryService:
                 return make_response(jsonify({
                     "message": "Server error"
                 }), 500)
-        
+
     # DISGUSTING UPDATE METHOD. UPDATE NEEDED
     def update_link(self, link_id, user_id, new_title, new_url, new_category, new_date):
         link = self.link_repo.get_link(link_id)
