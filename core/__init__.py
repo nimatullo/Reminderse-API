@@ -13,18 +13,20 @@ from flask_swagger import swagger
 from flask_migrate import Migrate
 
 app = Flask(__name__)
-cors = CORS(app, origins=["https://.*--vigorous-varahamihira-d00b87.netlify.app" if app.config["ENV"] == "testing" else "https://www.reminderse.com"
-                          ],
+cors = CORS(app, 
             headers=['Content-Type'],
             expose_headers=['Access-Control-Allow-Origin'],
             supports_credentials=True)
 
 if app.config["ENV"] == "production":
     app.config.from_object("config.ProductionConfig")
+    cors.orgins = ["https://www.reminderse.com"]
 elif app.config["ENV"] == "development":
     app.config.from_object("config.DevelopmentConfig")
+    cors.origins = ["http://localhost:3000"]
 elif app.config["ENV"] == "testing":
     app.config.from_object("config.TestingConfig")
+    cors.origins = ["https://.*--vigorous-varahamihira-d00b87.netlify.app"]
 
 db = SQLAlchemy(app, engine_options={'pool_pre_ping': True})
 db.create_all()

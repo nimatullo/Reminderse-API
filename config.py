@@ -9,6 +9,7 @@ class Config(object):
     CSRF_ENABLED = True
     SWAGGER_URL = '/api/docs'
     API_URL = '/static/swagger.json'
+    JWT_SESSION_COOKIE = False
 
 
 class ProductionConfig(Config):
@@ -29,7 +30,7 @@ class ProductionConfig(Config):
     JWT_CSRF_IN_COOKIES = True
     JWT_COOKIE_SAMESITE = "None"
     JWT_COOKIE_SECURE = True
-    JWT_COOKIE_DOMAIN = ".reminderse.com"
+    JWT_COOKIE_DOMAIN = "*.reminderse.com"
     JWT_COOKIE_CSRF_PROTECT = True
 
 
@@ -46,7 +47,7 @@ class DevelopmentConfig(Config):
     JWT_REFRESH_COOKIE_PATH = '/token/refresh'
     JWT_CSRF_IN_COOKIES = True
     JWT_COOKIE_SAMESITE = "None"
-    JWT_COOKIE_SECURE = True
+    JWT_COOKIE_SECURE = False
     JWT_COOKIE_CSRF_PROTECT = True
 
 
