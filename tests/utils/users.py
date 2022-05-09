@@ -11,7 +11,6 @@ def user_authentication_headers(client: TestClient,email:str,  password: str):
   }
   r = client.post("/login", json.dumps(data))
   response = r.json()
-  print(response)
   token = response["token"]
   headers = {"Authorization": f"Bearer {token}"}
   return headers 

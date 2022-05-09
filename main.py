@@ -10,7 +10,8 @@ app = FastAPI()
 
 @AuthJWT.load_config
 def get_settings():
-	return settings
+  return settings
+
 
 app.include_router(auth, prefix="/auth", tags=["auth"])
 app.include_router(me, prefix="/me", tags=["user"])

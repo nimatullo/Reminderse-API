@@ -1,7 +1,4 @@
-from datetime import datetime, timedelta, timezone
 from core.api.users.repo import UserRepository
-from core.config import settings
-from flask import make_response, jsonify
 import bcrypt
 
 from fastapi.responses import JSONResponse
@@ -63,32 +60,6 @@ class UserService:
             return False
         return user
     
-    def get_current_user_from_token(self, token: str):
-        try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-            id: str = payload.get("sub")
-            if not id:
-                raise Exception("Invalid token")
-        except JWTError:
-            raise Exception("Invalid token")
-        
-        user = self.repo.get_userinfo_id(id)
-        if not user:
-            raise Exception("Invalid token")
-        return user
-
-    def refresh_token(self, current_user):
-        token_expiration = timedelta(days=7)
-        access_token = create_refresh_token(
-            identity=current_user,
-            expires_delta=token_expiration
-        )
-        response = jsonify({
-            "refreshed": True
-        })
-        set_access_cookies(response, access_token)
-        return make_response(response, 200)
-
     def update_username(self, new_username, current_user_id):
         if self.repo.username_exists(new_username):
             raise Exception("Username already exists")
@@ -103,47 +74,42 @@ class UserService:
             else:
                 raise Exception("Server error")
 
-    def update_email(self, new_email, current_user):
+    def update_email(self, new_email, current_user_id):
         if self.repo.email_exists(new_email):
-            return make_response(jsonify({
-                "message": "Email is already taken"
-            }), 400)
-        elif current_user.email is not new_email:
-            if self.repo.change_email(current_user.id, new_email):
-                self.send_confirmation_email(new_email)
-                return make_response(jsonify({
+            raise Exception("Email already exists")
+        
+        user = self.repo.get_userinfo_id(current_user_id)
+        
+        if user.email is not new_email:
+            if self.repo.change_email(current_user_id, new_email):
+                return {
                     "message": "Changes saved"
-                }), 200)
+                }
             else:
-                return make_response(jsonify({
-                    "message": "Server error"
-                }), 500)
+                raise Exception("Server error")
 
-    def update_password(self, new_password, current_user):
-        new_hashed_password = bcrypt.generate_password_hash(
-            new_password).decode('utf8')
-        if self.repo.change_password(current_user.id, new_hashed_password):
-            return make_response(jsonify({
+    def update_password(self, new_password, current_user_id):
+        new_hashed_password = bcrypt.hashpw(
+            new_password.encode('utf8'), bcrypt.gensalt())
+        
+        if self.repo.change_password(current_user_id, new_hashed_password.decode('utf8')):
+            return {
                 "message": "Changes saved"
-            }))
+            }
         else:
-            return make_response(jsonify({
+            return {
                 "message": "Server error"
-            }), 500)
+            }
 
-    def update_interval(self, new_interval, current_user):
-        if self.repo.change_interval(new_interval, current_user.id):
-            return make_response(jsonify({
+    def update_interval(self, new_interval, current_user_id):
+        if self.repo.change_interval(new_interval, current_user_id):
+            return {
                 "message": "Changes saved"
-            }), 200)
+            }
         else:
-            return make_response(jsonify({
+            return {
                 "message": "Server error"
-            }), 500)
+            }
 
     def is_password_correct(self, saved_password_hash, entered_password):
         return bcrypt.checkpw(entered_password.encode('utf8'), saved_password_hash.encode('utf8'))
-
-    def get_current_user(self):
-        current_user_id = get_jwt_identity()
-        return self.repo.get_userinfo_id(current_user_id)
