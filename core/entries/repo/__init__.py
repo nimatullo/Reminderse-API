@@ -1,6 +1,6 @@
 from datetime import date, datetime, timedelta
 
-from core.users.service import UserService
+from core.api.users.service import UserService
 from core.models import Category, Links, Text
 from core import db
 

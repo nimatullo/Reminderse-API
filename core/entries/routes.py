@@ -5,7 +5,7 @@ from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import jwt_required
 
 from core import daily_email
-from core.users.service import UserService
+from core.api.users.service import UserService
 
 entries = Blueprint('entries', __name__)
 service = EntryService()

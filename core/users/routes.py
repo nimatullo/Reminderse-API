@@ -1,4 +1,4 @@
-from core.users.service import UserService
+from core.api.users.service import UserService
 
 from flask import Blueprint
 from flask import request, jsonify, make_response
@@ -7,7 +7,7 @@ from flask_login import logout_user
 
 from core import db, ts, version, build, app
 from core.models import Users, Links, Text
-from core.users import service
+from core.api.users import service
 
 users = Blueprint('users', __name__)
 service = UserService()
