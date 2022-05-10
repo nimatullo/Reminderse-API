@@ -4,6 +4,7 @@ from fastapi import Request, Response, HTTPException
 from fastapi.routing import APIRoute
 from fastapi_jwt_auth.exceptions import MissingTokenError
 
+# https://stackoverflow.com/a/69720977
 class RouteErrorHandler(APIRoute):
   def get_route_handler(self) -> Callable:
     original_handler = super().get_route_handler()

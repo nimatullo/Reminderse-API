@@ -4,6 +4,8 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from core.api.users.repo import UserRepository
 
+# https://www.fastapitutorial.com/blog/fastapi-unit-test-jwt-header/
+
 def user_authentication_headers(client: TestClient,email:str,  password: str):
   data = {
     "email": email,

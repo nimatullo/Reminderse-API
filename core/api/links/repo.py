@@ -2,29 +2,8 @@ from datetime import date, datetime, timedelta
 
 from core.api.users.service import UserService
 from core.models import Category, Links, Text
-from core import db
+from core.database import save
 from sqlalchemy.orm import Session
-
-
-def save():
-    try:
-        db.session.commit()
-        return True
-    except:
-        db.session.rollback()
-        return False
-
-
-def add(data):
-    try:
-        db.session.add(data)
-        db.session.commit()
-        db.session.refresh(data)
-        return data
-    except Exception as ex:
-        print(f"Error saving data! {ex}")
-
-    return None
 
 
 def category_exists(category_title) -> Category:
@@ -57,16 +36,17 @@ class TextRepo:
     def add(self, title, content, category=None, date=None):
         current_user = self.user_service.get_current_user()
         if category == None:
-            text = Text(entry_title=title, text_content=content,
-                        date=date,
-                        users=current_user
-                        )
+            text = Text(
+                entry_title=title, text_content=content, date=date, users=current_user
+            )
         else:
-            text = Text(entry_title=title, text_content=content,
-                        users=current_user,
-                        category=category,
-                        date=date
-                        )
+            text = Text(
+                entry_title=title,
+                text_content=content,
+                users=current_user,
+                category=category,
+                date=date,
+            )
         return add(text)
 
     def get_all_texts_for_user(self, user_id):
@@ -80,9 +60,9 @@ class TextRepo:
 
     def get_text(self, text_id) -> Text:
         current_user = self.user_service.get_current_user()
-        return Text.query.filter_by(id=text_id)\
-            .filter_by(user_id=current_user.id)\
-            .first()
+        return (
+            Text.query.filter_by(id=text_id).filter_by(user_id=current_user.id).first()
+        )
 
     def delete_text(self, text_id):
         text = self.get_text(text_id)
@@ -117,23 +97,28 @@ class LinkRepo:
         self.user_service = UserService(db)
         self.db = db
 
-    def add(self, title, url, category=None, date=None):
-        current_user = self.user_service.get_current_user()
+    def add(self, title, url, current_user, category=None, date=None):
         if category == None:
-            link = Links(entry_title=title, url=url,
-                         users=current_user,
-                         date=date
-                         )
+            link = Links(
+                entry_title=title,
+                url=url,
+                user_id=current_user["sub"],
+                interval=current_user["interval"],
+                date=date,
+            )
         else:
-            link = Links(entry_title=title, url=url,
-                         users=current_user,
-                         category=category,
-                         date=date
-                         )
-        return add(link)
+            link = Links(
+                entry_title=title,
+                url=url,
+                user_id=current_user["sub"],
+                interval=current_user["interval"],
+                category=category,
+                date=date,
+            )
+        return save(self.db, link)
 
     def get_all_links_for_user(self, user_id):
-        return Links.query.filter_by(user_id=user_id).all()
+        return self.db.query(Links).filter_by(user_id=user_id).all()
 
     def home_page_texts(self, user_id):
         day = date.today() + timedelta(days=3)
@@ -150,9 +135,9 @@ class LinkRepo:
 
     def get_link(self, link_id) -> Links:
         current_user = self.user_service.get_current_user()
-        return Links.query.filter_by(id=link_id)\
-            .filter_by(user_id=current_user.id)\
-            .first()
+        return (
+            Links.query.filter_by(id=link_id).filter_by(user_id=current_user.id).first()
+        )
 
     def update_entry_title(self, link, entry_title):
         print(f"Updating entry {link.entry_title} to {entry_title}")

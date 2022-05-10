@@ -1,5 +1,6 @@
 from core.models import Users
 from sqlalchemy.orm import Session
+from core.database import save
 
 
 class UserRepository():
@@ -7,25 +8,11 @@ class UserRepository():
     def __init__(self, db: Session):
         self.db = db
 
-    def save(self, data=None):
-        try:
-            if data:
-                self.db.add(data)
-            self.db.commit()
-        except Exception as e:
-            print(f'Exception thrown during UserRepository save(): {e}')
-            self.db.rollback()
-            return False
-        finally:
-            print("Commiting save!")
-
-        return True
-
     def add(self, username, email, password) -> bool:
         data = Users(username=username.lower().rstrip(),
                      password=password, email=email.lower())
 
-        return self.save(data)
+        return save(self.db, data)
 
     def username_exists(self, username) -> bool:
         if self.db.query(Users).filter_by(username=username).first():
@@ -49,25 +36,25 @@ class UserRepository():
     def change_username(self, user_id, new_username):
         user = self.db.query(Users).filter_by(id=user_id).first()
         user.username = new_username
-        return self.save()
+        return save(self.db)
 
     def change_email(self, user_id, email):
         user = self.db.query(Users).filter_by(id=user_id).first()
         user.email = email
         user.email_confirmed = False
-        return self.save()
+        return save(self.db)
 
     def change_password(self, id, password):
         user = self.db.query(Users).filter_by(id=id).first()
         user.password = password
-        return self.save()
+        return save(self.db)
 
     def change_interval(self, interval, id):
         user = self.db.query(Users).filter_by(id=id).first()
         user.interval = interval
-        return self.save()
+        return save(self.db)
 
     def set_email_to_confirmed(self, email) -> bool:
         user = self.db.query(Users).filter_by(email=email).first()
         user.email_confirmed = True
-        return self.save()
+        return save(self.db)

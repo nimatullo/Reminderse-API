@@ -21,6 +21,7 @@ from core.database.database import Base
 from core.database.database import get_db
 from core.api.auth.routes import auth
 from core.api.users.routes import me
+from core.api.links.routes import links
 from tests.utils.users import authentication_token_from_email
 from core.config import settings
 
@@ -34,6 +35,7 @@ def start_app():
   
   app.include_router(auth)
   app.include_router(me)
+  app.include_router(links, prefix="/links")
   return app
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
