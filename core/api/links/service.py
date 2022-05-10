@@ -67,32 +67,32 @@ class LinkService:
                 - Save link
         """
         validated_url = self.validate_url(newEntryRequest.content)
+        validated_date = self.validate_date(newEntryRequest.date_of_next_send)
         if newEntryRequest.category:
             category = get_category_if_exists(self.db, newEntryRequest.category)
             if not category:
                 category = add_new_category(self.db, newEntryRequest.category)
-
-            date_of_next_send = datetime.strptime(
-                newEntryRequest.date_of_next_send, "%Y-%m-%d"
-            )
 
             if self.repo.add(
                 title=newEntryRequest.entry_title,
                 url=validated_url,
                 current_user=user,
                 category=category,
-                date=date_of_next_send,
+                date=validated_date,
             ):
                 return {"message": "Link entry created"}
             else:
                 raise Exception("Server error")
         else:
             if self.repo.add(
-                title=entry_title, url=validated_url, date=date_of_next_send
+                title=newEntryRequest.entry_title,
+                url=validated_url,
+                date=validated_date,
+                current_user=user,
             ):
-                return make_response(jsonify({"message": "Link entry created"}), 201)
+                return {"message": "Link entry created"}
             else:
-                return make_response(jsonify({"message": "Server error"}), 500)
+                return {"message": "Server error"}
 
     def update_link(self, link_id, user_id, new_title, new_url, new_category, new_date):
         link = self.repo.get_link(link_id)
@@ -137,7 +137,7 @@ class LinkService:
             "entry_title": link.entry_title,
             "url": link.url,
             "days": self.get_date_diff(link),
-            "category": self.get_category_instance(self.db, link.category_id),
+            "category": link.category.title if link.category else None,
         }
 
     def get_category_instance(self, db, category_id):
@@ -160,4 +160,10 @@ class LinkService:
         if "http" in url or "https" in url:
             return url
         else:
-            return "https://"
+            return "https://" + url
+
+    def validate_date(self, date):
+        if date:
+            return datetime.strptime(date, "%Y-%m-%d")
+        else:
+            return None

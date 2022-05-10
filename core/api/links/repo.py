@@ -1,9 +1,9 @@
 from datetime import date, datetime, timedelta
 
 from core.api.users.service import UserService
-from core.models import Category, Links, Text
+from core.models import Category, Links, Text, Users
 from core.database import save
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 
 def category_exists(category_title) -> Category:
@@ -118,7 +118,15 @@ class LinkRepo:
         return save(self.db, link)
 
     def get_all_links_for_user(self, user_id):
-        return self.db.query(Links).filter_by(user_id=user_id).all()
+        return (
+            self.db.query(Links)
+            .options(
+                joinedload(Links.category),
+            )
+            .filter(Links.user_id == user_id)
+            .all()
+        )
+        # return self.db.query(Links).filter_by(user_id=user_id).join(Users).all()
 
     def home_page_texts(self, user_id):
         day = date.today() + timedelta(days=3)

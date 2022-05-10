@@ -34,7 +34,7 @@ def get_new_date():
 
 class Category(Base):
     __tablename__ = "category"
-    id = Column(Text(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     title = Column(String(50), nullable=False)
 
     def __repr__(self):
@@ -44,16 +44,14 @@ class Category(Base):
 class Links(Base):
 
     __tablename__ = "links"
-    id = Column(Text(length=36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(String(length=36), primary_key=True, default=lambda: str(uuid.uuid4()))
     entry_title = Column(String(100), nullable=False)
     url = Column(String(300), nullable=False)
     user_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     date = get_new_date()
     date_of_next_send = Column(Date, nullable=False, default=date)
     category_id = Column(String, ForeignKey("category.id"))
-    category = relationship(
-        "Category", cascade="all,delete", backref=backref("links", lazy="dynamic")
-    )
+    category = relationship("Category", cascade="all,delete", backref=("links"))
 
     def __init__(
         self, entry_title, url, user_id, interval, category=None, date=None
