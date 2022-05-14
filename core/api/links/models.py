@@ -7,3 +7,10 @@ class NewEntryRequest(BaseModel):
     content: str
     category: Optional[str] = None
     date_of_next_send: Optional[str] = None
+
+
+class EntryResponse(BaseModel):
+    entry_title: str
+    content: str
+    category: Optional[str] = None
+    date_of_next_send: Optional[str] = None

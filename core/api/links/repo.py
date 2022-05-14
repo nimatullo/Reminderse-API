@@ -141,10 +141,13 @@ class LinkRepo:
         db.session.delete(link)
         return save()
 
-    def get_link(self, link_id) -> Links:
-        current_user = self.user_service.get_current_user()
+    def get_link(self, link_id, current_user_id) -> Links:
         return (
-            Links.query.filter_by(id=link_id).filter_by(user_id=current_user.id).first()
+            self.db.query(Links)
+            .filter_by(id=link_id)
+            .filter_by(user_id=current_user_id)
+            .options(joinedload(Links.category))
+            .first()
         )
 
     def update_entry_title(self, link, entry_title):
@@ -163,4 +166,4 @@ class LinkRepo:
 
     def update_date(self, link: Links, date):
         link.date_of_next_send = date
-        return save()
+        return save(self.db)

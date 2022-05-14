@@ -1,6 +1,7 @@
 from flask import json, make_response, jsonify
 from core.api.links.models import NewEntryRequest
 from core.api.links.repo import LinkRepo
+from core.api.response import response
 from core.database import get_category_if_exists, add_new_category, get_category_by_id
 
 # from core.entries.repo import get_category_by_id, get_category_by_title, category_exists, add_new_category
@@ -12,46 +13,35 @@ class LinkService:
         self.repo = LinkRepo(db)
         self.db = db
 
-    def get_link(self, link_id):
-        link = self.repo.get_link(link_id)
+    def get_link(self, link_id, user_id):
+        link = self.repo.get_link(link_id, user_id)
         if not link:
-            return make_response(jsonify({"message": "Link cannot be found"}), 404)
+            return response({"message": "Link not found"}, 404)
+        return response(link, 200)
 
-        category = get_category_by_id(link.category_id)
-
-        if category:
-            category = category.title
-        else:
-            category = ""
-
-        return make_response(
-            jsonify(
-                {
-                    "id": link.id,
-                    "entry_title": link.entry_title,
-                    "url": link.url,
-                    "category": category,
-                    "date": link.date_of_next_send,
-                }
-            ),
-            200,
-        )
-
-    def pause_link(self, link_id):
+    def pause_link(self, link_id, current_user_id):
         paused_date = date.today() - timedelta(days=1)
-        link = self.repo.get_link(link_id)
-        if self.repo.update_date(link, paused_date):
-            return make_response(jsonify({"message": "Link paused"}), 200)
-        else:
-            return make_response(jsonify({"message": "Link does not exists"}), 404)
+        link = self.repo.get_link(link_id, current_user_id)
 
-    def resume_link(self, link_id):
-        resume_date = date.today() + timedelta(days=3)
-        link = self.repo.get_link(link_id)
-        if self.repo.update_date(link, resume_date):
-            return make_response(jsonify({"message": "Link paused"}), 200)
+        if not link:
+            return response({"message": "Link not found"}, 404)
+
+        if self.repo.update_date(link, paused_date):
+            return response({"message": "Link paused"}, 200)
         else:
-            return make_response(jsonify({"message": "Link does not exists"}), 404)
+            return response({"message": "Server error"}, 500)
+
+    def resume_link(self, link_id, current_user_id):
+        resume_date = date.today() + timedelta(days=3)
+        link = self.repo.get_link(link_id, current_user_id)
+
+        if not link:
+            return response({"message": "Link not found"}, 404)
+
+        if self.repo.update_date(link, resume_date):
+            return response({"message": "Link resumed"}, 200)
+        else:
+            return response({"message": "Server error"}, 500)
 
     def add_link(self, newEntryRequest: NewEntryRequest, user: dict):
         """
@@ -80,7 +70,7 @@ class LinkService:
                 category=category,
                 date=validated_date,
             ):
-                return {"message": "Link entry created"}
+                return response({"message": "Link entry created"}, 201)
             else:
                 raise Exception("Server error")
         else:
@@ -90,9 +80,9 @@ class LinkService:
                 date=validated_date,
                 current_user=user,
             ):
-                return {"message": "Link entry created"}
+                return response({"message": "Link entry created"}, 201)
             else:
-                return {"message": "Server error"}
+                return response({"message": "Server error"}, 500)
 
     def update_link(self, link_id, user_id, new_title, new_url, new_category, new_date):
         link = self.repo.get_link(link_id)
@@ -119,8 +109,8 @@ class LinkService:
 
     def get_all(self, user_id):
         all_links = self.repo.get_all_links_for_user(user_id)
-        response = [self.convert_link_to_dictionary(link) for link in all_links]
-        return {"entries": response}
+        payload = [self.convert_link_to_dictionary(link) for link in all_links]
+        return response({"entries": payload}, 200)
 
     def convert_text_to_dictionary(self, text):
         return {

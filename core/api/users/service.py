@@ -1,5 +1,7 @@
-from core.api.users.repo import UserRepository
 import bcrypt
+
+from core.api.users.repo import UserRepository
+from core.api.response import response
 
 from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
@@ -20,7 +22,7 @@ class UserService:
         result = self.repo.add(username, email, hashed_password.decode("utf8"))
 
         if result:
-            return {"message": "User created"}
+            return response({"message": "User created"}, 201)
         else:
             raise Exception("Server error")
 
@@ -28,7 +30,7 @@ class UserService:
         result = self.repo.set_email_to_confirmed(email)
 
         if result:
-            return {"message": "Email confirmed"}
+            return response({"message": "Email confirmed"}, 200)
         else:
             raise Exception("Server error")
 
@@ -58,7 +60,6 @@ class UserService:
 
     def authenticate(self, email: str, password: str):
         user = self.repo.get_userinfo_email(email)
-        print(f"The found user: {user}")
         if not user:
             return False
         if not self.is_password_correct(user.password, password):
@@ -73,7 +74,7 @@ class UserService:
 
         if user.username is not new_username:
             if self.repo.change_username(current_user_id, new_username):
-                return {"message": "Changes saved"}
+                return response({"message": "Changes saved"}, 200)
             else:
                 raise Exception("Server error")
 
@@ -85,7 +86,7 @@ class UserService:
 
         if user.email is not new_email:
             if self.repo.change_email(current_user_id, new_email):
-                return {"message": "Changes saved"}
+                return response({"message": "Changes saved"}, 200)
             else:
                 raise Exception("Server error")
 
@@ -97,15 +98,15 @@ class UserService:
         if self.repo.change_password(
             current_user_id, new_hashed_password.decode("utf8")
         ):
-            return {"message": "Changes saved"}
+            return response({"message": "Changes saved"}, 200)
         else:
-            return {"message": "Server error"}
+            return response({"message": "Server error"}, 500)
 
     def update_interval(self, new_interval, current_user_id):
         if self.repo.change_interval(new_interval, current_user_id):
-            return {"message": "Changes saved"}
+            return response({"message": "Changes saved"}, 200)
         else:
-            return {"message": "Server error"}
+            return response({"message": "Server error"}, 500)
 
     def is_password_correct(self, saved_password_hash, entered_password):
         return bcrypt.checkpw(

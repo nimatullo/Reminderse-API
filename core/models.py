@@ -9,7 +9,7 @@ from core.database.database import Base
 
 class Users(Base):
     __tablename__ = "users"
-    id = Column(Text(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(20), unique=True, nullable=False)
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(60), nullable=False)
@@ -34,7 +34,7 @@ def get_new_date():
 
 class Category(Base):
     __tablename__ = "category"
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(50), nullable=False)
 
     def __repr__(self):
@@ -44,13 +44,15 @@ class Category(Base):
 class Links(Base):
 
     __tablename__ = "links"
-    id = Column(String(length=36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(Integer, primary_key=True, autoincrement=True)
     entry_title = Column(String(100), nullable=False)
     url = Column(String(300), nullable=False)
-    user_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
     date = get_new_date()
     date_of_next_send = Column(Date, nullable=False, default=date)
-    category_id = Column(String, ForeignKey("category.id"))
+    category_id = Column(Integer, ForeignKey("category.id"))
     category = relationship("Category", cascade="all,delete", backref=("links"))
 
     def __init__(
@@ -67,16 +69,27 @@ class Links(Base):
     def __repr__(self):
         return "Link('{0}', '{1}',)".format(self.entry_title, self.date_of_next_send)
 
+    def json(self):
+        return {
+            "id": self.id,
+            "entry_title": self.entry_title,
+            "url": self.url,
+            "date": str(self.date_of_next_send),
+            "category": self.category if self.category else None,
+        }
+
 
 class Text(Base):
     __tablename__ = "text"
-    id = Column(Text(length=36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(Integer, primary_key=True, autoincrement=True)
     entry_title = Column(String(100), nullable=False)
     text_content = Column(String(1000), nullable=False)
     date = get_new_date()
     date_of_next_send = Column(Date, nullable=False, default=date)
-    user_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    category_id = Column(String, ForeignKey("category.id"))
+    user_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    category_id = Column(Integer, ForeignKey("category.id"))
     category = relationship(
         "Category", cascade="all,delete", backref=backref("text", lazy="dynamic")
     )
