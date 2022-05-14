@@ -18,7 +18,6 @@ blinker==1.4
 Brotli==1.0.9
 bs4==0.0.1
 certifi==2019.6.16
-cffi==1.14.0
 cfractions==1.4.0
 chardet==3.0.4
 charset-normalizer==2.0.12
