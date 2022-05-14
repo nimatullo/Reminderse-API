@@ -1,5 +1,5 @@
 from flask import json, make_response, jsonify
-from core.api.links.models import NewEntryRequest
+from core.api.links.models import NewEntryRequest, UpdateEntryRequest
 from core.api.links.repo import LinkRepo
 from core.api.response import response
 from core.database import get_category_if_exists, add_new_category, get_category_by_id
@@ -84,28 +84,25 @@ class LinkService:
             else:
                 return response({"message": "Server error"}, 500)
 
-    def update_link(self, link_id, user_id, new_title, new_url, new_category, new_date):
-        link = self.repo.get_link(link_id)
+    def update_link(self, link_id, user_id, updateEntryRequest: UpdateEntryRequest):
+        link = self.repo.get_link(link_id, user_id)
         if not link:
-            return make_response(jsonify({"message": "Link not found"}), 404)
+            return response({"message": "Link not found"}, 404)
 
-        if not link.user_id == user_id:
-            return make_response(jsonify({"message": "Unauthorized"}), 401)
-
-        self.repo.update_entry_title(link, new_title)
-        self.repo.update_url(link, new_url)
-        self.repo.update_date(link, new_date)
-        category = get_category_by_title(new_category)
+        self.repo.update_entry_title(link, updateEntryRequest.entry_title)
+        self.repo.update_url(link, updateEntryRequest.content)
+        self.repo.update_date(link, updateEntryRequest.date_of_next_send)
+        category = get_category_if_exists(self.db, updateEntryRequest.category)
         if not category:
-            category = add_new_category(new_category)
+            category = add_new_category(self.db, updateEntryRequest.category)
         self.repo.update_category(link, category.id)
-        return make_response(jsonify({"message": "Text updated"}), 200)
+        return response({"message": "Link updated"}, 200)
 
-    def delete_link(self, link_id):
-        if self.repo.delete_link(link_id):
-            return make_response(jsonify({"message": "Link deleted"}), 200)
+    def delete_link(self, link_id, current_user_id):
+        if self.repo.delete_link(link_id, current_user_id):
+            return response({"message": "Link deleted"}, 200)
         else:
-            return make_response(jsonify({"message": "Link deletion failed"}), 404)
+            return response({"message": "Link deletion failed"}, 404)
 
     def get_all(self, user_id):
         all_links = self.repo.get_all_links_for_user(user_id)

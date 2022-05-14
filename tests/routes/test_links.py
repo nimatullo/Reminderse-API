@@ -143,3 +143,62 @@ def test_resume_link(client, normal_user_token_headers):
 def test_resume_link_returns_not_found(client, normal_user_token_headers):
     response = client.put("/links/1/resume", headers=normal_user_token_headers)
     assert response.status_code == 404
+
+
+def test_delete_link(client, normal_user_token_headers):
+    data = {
+        "entry_title": "Test",
+        "content": "http://www.test.com",
+        "category": "Test Category",
+    }
+
+    response = client.post(
+        "/links/", json.dumps(data), headers=normal_user_token_headers
+    )
+    assert response.status_code == 201
+
+    response = client.get("/links", headers=normal_user_token_headers)
+    assert len(response.json()["entries"]) == 1
+
+    response = client.delete("/links/1", headers=normal_user_token_headers)
+    assert response.status_code == 200
+
+    response = client.get("/links", headers=normal_user_token_headers)
+    assert len(response.json()["entries"]) == 0
+
+
+def test_update_links(client, normal_user_token_headers):
+    data = {
+        "entry_title": "Test",
+        "content": "http://www.test.com",
+        "category": "Test Category",
+    }
+
+    response = client.post(
+        "/links/", json.dumps(data), headers=normal_user_token_headers
+    )
+    assert response.status_code == 201
+
+    new_data = {
+        "entry_title": "TestUpdate",
+        "content": "http://www.testUpdate.com",
+        "category": "Test Category Update",
+    }
+
+    response = client.put(
+        "/links/1", json.dumps(new_data), headers=normal_user_token_headers
+    )
+    assert response.status_code == 200
+
+
+def test_update_links_returns_not_found(client, normal_user_token_headers):
+    new_data = {
+        "entry_title": "TestUpdate",
+        "content": "http://www.testUpdate.com",
+        "category": "Test Category Update",
+    }
+
+    response = client.put(
+        "/links/1", json.dumps(new_data), headers=normal_user_token_headers
+    )
+    assert response.status_code == 404

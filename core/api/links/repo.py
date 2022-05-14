@@ -134,12 +134,12 @@ class LinkRepo:
             Links.date_of_next_send <= day
         )
 
-    def delete_link(self, link_id):
-        link = self.get_link(link_id)
+    def delete_link(self, link_id: str, current_user_id: str) -> bool:
+        link = self.get_link(link_id, current_user_id)
         if not link:
             return False
-        db.session.delete(link)
-        return save()
+        self.db.delete(link)
+        return save(self.db)
 
     def get_link(self, link_id, current_user_id) -> Links:
         return (
@@ -153,16 +153,16 @@ class LinkRepo:
     def update_entry_title(self, link, entry_title):
         print(f"Updating entry {link.entry_title} to {entry_title}")
         link.entry_title = entry_title
-        return save()
+        return save(self.db)
 
     def update_url(self, link, url):
         print(f"Updating URL from {link.url} to {url}")
         link.url = url
-        return save()
+        return save(self.db)
 
     def update_category(self, link, category_id):
         link.category_id = category_id
-        return save()
+        return save(self.db)
 
     def update_date(self, link: Links, date):
         link.date_of_next_send = date

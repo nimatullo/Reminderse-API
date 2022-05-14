@@ -2,8 +2,9 @@ import traceback
 from click import echo
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_jwt_auth import AuthJWT
+from httpx import Auth
 
-from core.api.links.models import NewEntryRequest, EntryResponse
+from core.api.links.models import NewEntryRequest, EntryResponse, UpdateEntryRequest
 from core.api.schemas.generic_response import MessageResponse
 from core.database.database import get_db
 from core.api.links.service import LinkService
@@ -50,8 +51,39 @@ def get(link_id: int, db: get_db = Depends(), Authenticate: AuthJWT = Depends())
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@links.delete("/{link_id}")
+def delete(link_id: int, db: get_db = Depends(), Authenticate: AuthJWT = Depends()):
+    Authenticate.jwt_required()
+    try:
+        USER_ID = Authenticate.get_jwt_subject()
+        return LinkService(db).delete_link(link_id, USER_ID)
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@links.put("/{link_id}", response_model=MessageResponse)
+def update(
+    link_id: int,
+    updateEntryRequest: UpdateEntryRequest,
+    db: get_db = Depends(),
+    Authenticate: AuthJWT = Depends(),
+):
+    Authenticate.jwt_required()
+    try:
+        USER_ID = Authenticate.get_jwt_subject()
+        return LinkService(db).update_link(
+            link_id=link_id,
+            updateEntryRequest=updateEntryRequest,
+            user_id=USER_ID,
+        )
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @links.put("/{link_id}/pause", response_model=MessageResponse)
-def pause_link(link_id: int, db: get_db = Depends(), Authenticate: AuthJWT = Depends()):
+def pause(link_id: int, db: get_db = Depends(), Authenticate: AuthJWT = Depends()):
     Authenticate.jwt_required()
     try:
         USER_ID = Authenticate.get_jwt_subject()
@@ -62,9 +94,7 @@ def pause_link(link_id: int, db: get_db = Depends(), Authenticate: AuthJWT = Dep
 
 
 @links.put("/{link_id}/resume", response_model=MessageResponse)
-def resume_link(
-    link_id: int, db: get_db = Depends(), Authenticate: AuthJWT = Depends()
-):
+def resume(link_id: int, db: get_db = Depends(), Authenticate: AuthJWT = Depends()):
     Authenticate.jwt_required()
     try:
         USER_ID = Authenticate.get_jwt_subject()

@@ -14,3 +14,10 @@ class EntryResponse(BaseModel):
     content: str
     category: Optional[str] = None
     date_of_next_send: Optional[str] = None
+
+
+class UpdateEntryRequest(BaseModel):
+    entry_title: Optional[str]
+    content: Optional[str]
+    category: Optional[str] = None
+    date_of_next_send: Optional[str] = None
