@@ -1,6 +1,6 @@
 # reminderse-api
 
-![example workflow](https://github.com/nimatullo/reminderese-api/actions/workflows/ci.yml/badge.svg)
+![example workflow](https://github.com/nimatullo/reminderese-api/fast-api-rewrite/actions/workflows/ci.yml/badge.svg)
 
 backend for [reminderse](https://www.reminderse.com)
 

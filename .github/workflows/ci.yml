@@ -9,6 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SQL_URL: "postgres://postgres:postgres@localhost:5432/postgres"
+      JWT_SECRET: "secret"
+      JWT_ALGORITHM: "HS256"
+      MAIL_USERNAME: "hello@reminderse.com"
+      MAIL_PASSWORD: "password"
+      MAIL_SERVER: "smtp.zoho.com"
     steps:
       - uses: actions/checkout@v2
       - name: Install Python
