@@ -7,6 +7,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SQL_URL: "postgres://postgres:postgres@localhost:5432/postgres"
     steps:
       - uses: actions/checkout@v2
       - name: Install Python
