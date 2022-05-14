@@ -2,8 +2,6 @@ aioredis==2.0.1
 aiosmtplib==1.1.6
 alembic==1.7.5
 aniso8601==9.0.1
-ansible==5.3.0
-ansible-core==2.12.2
 anyio==3.5.0
 apispec==5.1.1
 appdirs==1.4.4
