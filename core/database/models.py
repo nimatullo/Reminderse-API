@@ -46,7 +46,7 @@ class Links(Base):
     __tablename__ = "links"
     id = Column(Integer, primary_key=True, autoincrement=True)
     entry_title = Column(String(100), nullable=False)
-    url = Column(String(300), nullable=False)
+    content = Column(String(300), nullable=False)
     user_id = Column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
@@ -56,10 +56,10 @@ class Links(Base):
     category = relationship("Category", cascade="all,delete", backref=("links"))
 
     def __init__(
-        self, entry_title, url, user_id, interval, category=None, date=None
+        self, entry_title, content, user_id, interval, category=None, date=None
     ) -> None:
         self.entry_title = entry_title
-        self.url = url
+        self.content = content
         self.user_id = user_id
         self.category_id = category.id if category else None
         self.date_of_next_send = (
@@ -83,7 +83,7 @@ class Text(Base):
     __tablename__ = "text"
     id = Column(Integer, primary_key=True, autoincrement=True)
     entry_title = Column(String(100), nullable=False)
-    text_content = Column(String(1000), nullable=False)
+    content = Column(String(1000), nullable=False)
     date = get_new_date()
     date_of_next_send = Column(Date, nullable=False, default=date)
     user_id = Column(
@@ -95,15 +95,15 @@ class Text(Base):
     )
 
     def __init__(
-        self, entry_title, text_content, users, category=None, date=None
+        self, entry_title, text_content, user_id, interval, category=None, date=None
     ) -> None:
         self.entry_title = entry_title
-        self.text_content = text_content
-        self.user_id = users.id
+        self.content = text_content
+        self.user_id = user_id
         self.category_id = category.id if category else None
         self.date_of_next_send = (
-            date if date else datetime.now() + timedelta(days=users.interval)
+            date if date else datetime.now() + timedelta(days=interval)
         )
 
     def __repr__(self):
-        return "Text('{0}', '{1}',)".format(self.entry_title, self.text_content)
+        return "Text('{0}', '{1}',)".format(self.entry_title, self.content)

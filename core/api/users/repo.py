@@ -1,16 +1,16 @@
-from core.models import Users
+from core.database.models import Users
 from sqlalchemy.orm import Session
 from core.database import save
 
 
-class UserRepository():
-
+class UserRepository:
     def __init__(self, db: Session):
         self.db = db
 
     def add(self, username, email, password) -> bool:
-        data = Users(username=username.lower().rstrip(),
-                     password=password, email=email.lower())
+        data = Users(
+            username=username.lower().rstrip(), password=password, email=email.lower()
+        )
 
         return save(self.db, data)
 

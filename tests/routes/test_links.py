@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import json
 
 
@@ -94,13 +95,63 @@ def test_get_link(client, normal_user_token_headers):
     response = client.get(f"/links/1", headers=normal_user_token_headers)
     assert response.status_code == 200
     assert response.json()["entry_title"] == "Test"
-    assert response.json()["category"]["title"] == "Test Category"
+    assert response.json()["category"] == "Test Category"
+
+
+def test_is_paused(client, normal_user_token_headers):
+    data = {
+        "entry_title": "Test",
+        "content": "http://www.test.com",
+        "date_of_next_send": "2020-05-25",
+    }
+    response = client.post(
+        "/links/", json.dumps(data), headers=normal_user_token_headers
+    )
+    assert response.status_code == 201
+
+    response = client.get(f"/links/1", headers=normal_user_token_headers)
+    assert response.status_code == 200
+    assert response.json()["days"] == "Paused"
+
+
+def test_get_link_shows_days_as_today(client, normal_user_token_headers):
+    data = {
+        "entry_title": "Test",
+        "content": "http://www.test.com",
+        "date_of_next_send": datetime.today().strftime("%Y-%m-%d"),
+    }
+    response = client.post(
+        "/links/", json.dumps(data), headers=normal_user_token_headers
+    )
+    assert response.status_code == 201
+
+    response = client.get(f"/links/1", headers=normal_user_token_headers)
+    assert response.status_code == 200
+    assert response.json()["days"] == "Today"
+
+
+def test_get_link_shows_days_as_tomorrow(client, normal_user_token_headers):
+    data = {
+        "entry_title": "Test",
+        "content": "http://www.test.com",
+        "date_of_next_send": (datetime.today() + timedelta(days=1)).strftime(
+            "%Y-%m-%d"
+        ),
+    }
+    response = client.post(
+        "/links/", json.dumps(data), headers=normal_user_token_headers
+    )
+    assert response.status_code == 201
+
+    response = client.get(f"/links/1", headers=normal_user_token_headers)
+    assert response.status_code == 200
+    assert response.json()["days"] == "Tomorrow"
 
 
 def test_get_link_returns_not_found(client, normal_user_token_headers):
     response = client.get("/links/1", headers=normal_user_token_headers)
     assert response.status_code == 404
-    assert response.json()["message"] == "Link not found"
+    assert response.json()["message"] == "Entry not found"
 
 
 def test_pause_link(client, normal_user_token_headers):
@@ -116,7 +167,7 @@ def test_pause_link(client, normal_user_token_headers):
 
     response = client.put(f"/links/1/pause", headers=normal_user_token_headers)
     assert response.status_code == 200
-    assert response.json()["message"] == "Link paused"
+    assert response.json()["message"] == "Entry paused"
 
 
 def test_pause_link_returns_not_found(client, normal_user_token_headers):
@@ -189,6 +240,9 @@ def test_update_links(client, normal_user_token_headers):
         "/links/1", json.dumps(new_data), headers=normal_user_token_headers
     )
     assert response.status_code == 200
+
+    response = client.get("/links", headers=normal_user_token_headers)
+    assert response.json()["entries"][0]["entry_title"] == "TestUpdate"
 
 
 def test_update_links_returns_not_found(client, normal_user_token_headers):

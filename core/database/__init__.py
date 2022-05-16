@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from core.models import Category
+from core.database.models import Category
 
 
 def save(db: Session, data=None) -> bool:
