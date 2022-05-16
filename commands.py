@@ -1,3 +1,3 @@
-from core.database.database import Base
+from core.database.database import create_tables
 
-Base.metadata.create_all()
+create_tables()

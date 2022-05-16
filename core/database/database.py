@@ -20,4 +20,8 @@ def get_db():
         db.close()
 
 
+def create_tables():
+    Base.metadata.create_all(engine)
+
+
 Base = declarative_base()
