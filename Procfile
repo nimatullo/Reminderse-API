@@ -1,1 +1,1 @@
-web: uvicorn run:app --preload
+web: uvicorn run:app --reload
