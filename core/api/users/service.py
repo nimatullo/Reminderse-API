@@ -34,6 +34,15 @@ class UserService:
         else:
             raise Exception("Server error")
 
+    def is_email_confirmed(self, user_id):
+        user = self.repo.get_userinfo_id(user_id)
+        if not user:
+            return response({"message": "User not found"}, 404)
+        if user.email_confirmed:
+            return response({"message": "Email confirmed"}, 200)
+        else:
+            return response({"message": "Email not confirmed"}, 400)
+
     def login(self, email, password, Authorize: AuthJWT):
         user = self.authenticate(email, password)
         if not user:
@@ -55,7 +64,7 @@ class UserService:
                 "token": access_token,
             }
         )
-        response.set_cookie(key="token", value=access_token)
+        Authorize.set_access_cookies(access_token, response)
         return response
 
     def authenticate(self, email: str, password: str):
@@ -112,3 +121,13 @@ class UserService:
         return bcrypt.checkpw(
             entered_password.encode("utf8"), saved_password_hash.encode("utf8")
         )
+
+    def get_user_email(self, user_id):
+        user = self.repo.get_userinfo_id(user_id)
+        return user.email
+
+    def user_email_confirmed(self, user_email):
+        if self.repo.set_email_to_confirmed(user_email):
+            return response({"message": "Email confirmed"}, 200)
+        else:
+            return response({"message": "Server error"}, 500)

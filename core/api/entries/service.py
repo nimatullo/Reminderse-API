@@ -51,9 +51,9 @@ class EntryService:
         self.repo.update_content(entry, updateEntryRequest.content)
         self.repo.update_date(entry, updateEntryRequest.date_of_next_send)
         category = get_category_if_exists(self.db, updateEntryRequest.category)
-        if not category:
+        if not category and updateEntryRequest.category != None:
             category = add_new_category(self.db, updateEntryRequest.category)
-        self.repo.update_category(entry, category.id)
+            self.repo.update_category(entry, category.id)
         return response({"message": "Entry updated"}, 200)
 
     def delete(self, model, id, user_id):
@@ -72,7 +72,7 @@ class EntryService:
             "id": entry.id,
             "entry_title": entry.entry_title,
             "category": entry.category.title if entry.category else None,
-            "days": self.get_date_diff(entry),
+            "date_of_next_send": entry.date_of_next_send,
         }
         if validators.url(entry.content):
             json["url"] = entry.content

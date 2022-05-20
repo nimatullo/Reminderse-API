@@ -32,6 +32,7 @@ def add(
 
 @texts.get("/")
 def get_all(db: get_db = Depends(), Authenticate: AuthJWT = Depends()):
+    Authenticate.jwt_required()
     try:
         USER_ID = Authenticate.get_jwt_subject()
         return EntryService(db).get_all(model=Text, user_id=USER_ID)
