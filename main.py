@@ -12,13 +12,12 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",
-    "https://*--vigorous-varahamihira-d00b87.netlify.app",
+    "https://deploy-preview-19--vigorous-varahamihira-d00b87.netlify.app/",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex="https://*--vigorous-varahamihira-d00b87.netlify.app",
-    # allow_origins_rege=origins,
+    allow_origins_rege=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
