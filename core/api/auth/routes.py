@@ -6,13 +6,16 @@ from core.api.schemas.generic_response import MessageResponse
 from core.api.users.service import UserService
 from core.email.send_email import send
 from itsdangerous import URLSafeTimedSerializer
-ts = URLSafeTimedSerializer('super-secret-key')
+
+ts = URLSafeTimedSerializer("super-secret-key")
 
 auth = APIRouter()
 
 
 @auth.post("/login", response_model=LoginResponse)
-async def login(userPayload: LoginRequest, db: get_db = Depends(), Authorize: AuthJWT = Depends() ) -> LoginResponse:
+async def login(
+    userPayload: LoginRequest, db: get_db = Depends(), Authorize: AuthJWT = Depends()
+) -> LoginResponse:
     try:
         return UserService(db).login(userPayload.email, userPayload.password, Authorize)
     except Exception as e:
@@ -21,11 +24,29 @@ async def login(userPayload: LoginRequest, db: get_db = Depends(), Authorize: Au
 
 
 @auth.post("/signup", response_model=MessageResponse)
-async def signup(registerPayload: RegisterRequest, background_tasks: BackgroundTasks, db: get_db = Depends()) -> MessageResponse:
-    background_tasks.add_task(send, registerPayload.email, {
-        "token": ts.dumps(registerPayload.email, salt="email-confirmation-salt")
-    })
+async def signup(
+    registerPayload: RegisterRequest,
+    background_tasks: BackgroundTasks,
+    db: get_db = Depends(),
+) -> MessageResponse:
+    background_tasks.add_task(
+        send,
+        registerPayload.email,
+        {"token": ts.dumps(registerPayload.email, salt="email-confirmation-salt")},
+    )
     try:
-     return UserService(db).signup(registerPayload.username, registerPayload.email, registerPayload.password)
+        return UserService(db).signup(
+            registerPayload.username, registerPayload.email, registerPayload.password
+        )
     except Exception as e:
-     raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@auth.delete("/logout", response_model=MessageResponse)
+async def logout(db: get_db = Depends(), Authorize: AuthJWT = Depends()):
+    Authorize.jwt_required()
+    try:
+        return UserService(db).logout(Authorize)
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=400, detail=str(e))

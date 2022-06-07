@@ -12,6 +12,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",
+    "https://*--vigorous-varahamihira-d00b87.netlify.app",
 ]
 
 app.add_middleware(
@@ -26,6 +27,11 @@ app.add_middleware(
 @AuthJWT.load_config
 def get_settings():
     return settings
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 
 app.include_router(auth, prefix="/auth", tags=["auth"])

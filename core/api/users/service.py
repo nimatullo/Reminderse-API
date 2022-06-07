@@ -67,6 +67,11 @@ class UserService:
         Authorize.set_access_cookies(access_token, response)
         return response
 
+    def logout(self, Authorize: AuthJWT):
+        response = JSONResponse(content={"message": "Logged out"})
+        Authorize.unset_jwt_cookies(response)
+        return response
+
     def authenticate(self, email: str, password: str):
         user = self.repo.get_userinfo_email(email)
         if not user:
