@@ -7,7 +7,7 @@ class Settings(BaseModel):
     authjwt_token_location: set = {"cookies"}
     authjwt_cookie_csrf_protect: bool = False
     authjwt_cookie_secure: bool = True
-    authjwt_cookie_samesite: str = "lax"
+    authjwt_cookie_samesite: str = "none"
     SECRET_KEY: str = "secret"
     ALGORITHM = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES = 30  # minutes
