@@ -11,7 +11,6 @@ from core.config import settings
 app = FastAPI()
 
 origins = [
-    "https://deploy-preview-20--vigorous-varahamihira-d00b87.netlify.app",
     "https://www.reminderse.com",
 ]
 
