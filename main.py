@@ -11,8 +11,7 @@ from core.config import settings
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000",
-    "https://deploy-preview-20--vigorous-varahamihira-d00b87.netlify.app/",
+    "https://deploy-preview-20--vigorous-varahamihira-d00b87.netlify.app",
 ]
 
 app.add_middleware(
