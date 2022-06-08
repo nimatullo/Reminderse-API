@@ -6,6 +6,7 @@ from core.api.schemas.generic_response import MessageResponse
 from core.api.users.service import UserService
 from core.email.send_email import send
 from itsdangerous import URLSafeTimedSerializer
+import traceback
 
 ts = URLSafeTimedSerializer("super-secret-key")
 
@@ -19,7 +20,7 @@ async def login(
     try:
         return UserService(db).login(userPayload.email, userPayload.password, Authorize)
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -39,6 +40,7 @@ async def signup(
             registerPayload.username, registerPayload.email, registerPayload.password
         )
     except Exception as e:
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -48,5 +50,5 @@ async def logout(db: get_db = Depends(), Authorize: AuthJWT = Depends()):
     try:
         return UserService(db).logout(Authorize)
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))

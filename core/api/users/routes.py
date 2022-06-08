@@ -1,3 +1,5 @@
+import traceback
+
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from fastapi_jwt_auth import AuthJWT
 from itsdangerous import URLSafeTimedSerializer
@@ -31,7 +33,7 @@ async def change_username(
         USER_ID = Authenticate.get_jwt_subject()
         return UserService(db).update_username(usernameChangeRequest.username, USER_ID)
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -46,7 +48,7 @@ async def change_email(
         USER_ID = Authenticate.get_jwt_subject()
         return UserService(db).update_email(emailChangeRequest.email, USER_ID)
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -59,7 +61,7 @@ async def is_email_confirmed(
         USER_ID = Authenticate.get_jwt_subject()
         return UserService(db).is_email_confirmed(USER_ID)
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -74,7 +76,7 @@ async def change_password(
         USER_ID = Authenticate.get_jwt_subject()
         return UserService(db).update_password(passwordChangeRequest.password, USER_ID)
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -89,7 +91,7 @@ async def change_interval(
         USER_ID = Authenticate.get_jwt_subject()
         return UserService(db).update_interval(intervalChangeRequest.interval, USER_ID)
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 

@@ -25,7 +25,7 @@ def add(
         USER = Authenticate.get_raw_jwt()
         return LinkService(db).add_link(newEntryRequest, USER)
     except Exception as e:
-        print(traceback.format_exc())
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -36,7 +36,7 @@ def get_all(db: get_db = Depends(), Authenticate: AuthJWT = Depends()):
         USER_ID = Authenticate.get_jwt_subject()
         return EntryService(db).get_all(model=Links, user_id=USER_ID)
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -47,7 +47,7 @@ def get(link_id: int, db: get_db = Depends(), Authenticate: AuthJWT = Depends())
         USER_ID = Authenticate.get_jwt_subject()
         return EntryService(db).get(model=Links, id=link_id, user_id=USER_ID)
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -58,7 +58,7 @@ def delete(link_id: int, db: get_db = Depends(), Authenticate: AuthJWT = Depends
         USER_ID = Authenticate.get_jwt_subject()
         return EntryService(db).delete(model=Links, id=link_id, user_id=USER_ID)
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -79,7 +79,7 @@ def update(
             updateEntryRequest=updateEntryRequest,
         )
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -90,7 +90,7 @@ def pause(link_id: int, db: get_db = Depends(), Authenticate: AuthJWT = Depends(
         USER_ID = Authenticate.get_jwt_subject()
         return EntryService(db).pause(model=Links, id=link_id, user_id=USER_ID)
     except Exception as e:
-        print(traceback.format_exc())
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -101,5 +101,5 @@ def resume(link_id: int, db: get_db = Depends(), Authenticate: AuthJWT = Depends
         USER_ID = Authenticate.get_jwt_subject()
         return EntryService(db).resume(model=Links, id=link_id, user_id=USER_ID)
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
