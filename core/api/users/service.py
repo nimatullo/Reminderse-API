@@ -49,7 +49,7 @@ class UserService:
             raise Exception("Invalid credentials")
 
         access_token = Authorize.create_access_token(
-            subject=user.id,
+            subject=str(user.id),
             user_claims={
                 "interval": user.interval,
             },
