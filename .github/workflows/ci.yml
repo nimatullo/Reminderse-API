@@ -2,7 +2,7 @@ name: Test status
 on:
   push:
     branches:
-      - fast-api-rewrite
+      - testing
 
 jobs:
   build:
