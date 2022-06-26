@@ -55,7 +55,9 @@ def test_text_create_without_date(client, normal_user_token_headers):
 
     response = client.get("/texts", headers=normal_user_token_headers)
     assert response.status_code == 200
-    assert response.json()["entries"][0]["days"] == 3
+
+    date_in_3_days = (datetime.today() + timedelta(days=3)).strftime("%Y-%m-%d")
+    assert response.json()["entries"][0]["date_of_next_send"] == date_in_3_days
 
 
 def test_get_text(client, normal_user_token_headers):
@@ -95,7 +97,7 @@ def test_get_text_shows_days_as_today(client, normal_user_token_headers):
 
     response = client.get(f"/texts/1", headers=normal_user_token_headers)
     assert response.status_code == 200
-    assert response.json()["days"] == "Today"
+    assert response.json()["date_of_next_send"] == datetime.today().strftime("%Y-%m-%d")
 
 
 def test_get_text_shows_days_as_tomorrow(client, normal_user_token_headers):
@@ -113,14 +115,17 @@ def test_get_text_shows_days_as_tomorrow(client, normal_user_token_headers):
 
     response = client.get(f"/texts/1", headers=normal_user_token_headers)
     assert response.status_code == 200
-    assert response.json()["days"] == "Tomorrow"
+
+    tomorrows_date = (datetime.today() + timedelta(days=1)).strftime("%Y-%m-%d")
+    assert response.json()["date_of_next_send"] == tomorrows_date
 
 
 def test_is_paused(client, normal_user_token_headers):
+    yesterdays_date = (datetime.today() - timedelta(days=1)).strftime("%Y-%m-%d")
     data = {
         "entry_title": "Test",
         "content": "Tests",
-        "date_of_next_send": "2020-05-25",
+        "date_of_next_send": yesterdays_date,
     }
     response = client.post(
         "/texts/", json.dumps(data), headers=normal_user_token_headers
@@ -129,7 +134,8 @@ def test_is_paused(client, normal_user_token_headers):
 
     response = client.get(f"/texts/1", headers=normal_user_token_headers)
     assert response.status_code == 200
-    assert response.json()["days"] == "Paused"
+
+    assert response.json()["date_of_next_send"] == yesterdays_date
 
 
 def test_pause_text(client, normal_user_token_headers):

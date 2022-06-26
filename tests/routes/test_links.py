@@ -60,7 +60,9 @@ def test_add_link_without_date(client, normal_user_token_headers):
 
     response = client.get("/links", headers=normal_user_token_headers)
     assert response.status_code == 200
-    assert response.json()["entries"][0]["days"] == 3
+
+    date_in_3_days = (datetime.today() + timedelta(days=3)).strftime("%Y-%m-%d")
+    assert response.json()["entries"][0]["date_of_next_send"] == date_in_3_days
 
 
 def test_add_link_with_http_upgraded(client, normal_user_token_headers):
@@ -99,10 +101,11 @@ def test_get_link(client, normal_user_token_headers):
 
 
 def test_is_paused(client, normal_user_token_headers):
+    yesterday = (datetime.today() - timedelta(days=1)).strftime("%Y-%m-%d")
     data = {
         "entry_title": "Test",
         "content": "http://www.test.com",
-        "date_of_next_send": "2020-05-25",
+        "date_of_next_send": yesterday,
     }
     response = client.post(
         "/links/", json.dumps(data), headers=normal_user_token_headers
@@ -111,14 +114,15 @@ def test_is_paused(client, normal_user_token_headers):
 
     response = client.get(f"/links/1", headers=normal_user_token_headers)
     assert response.status_code == 200
-    assert response.json()["days"] == "Paused"
+    assert response.json()["date_of_next_send"] == yesterday
 
 
 def test_get_link_shows_days_as_today(client, normal_user_token_headers):
+    todays_date = datetime.today().strftime("%Y-%m-%d")
     data = {
         "entry_title": "Test",
         "content": "http://www.test.com",
-        "date_of_next_send": datetime.today().strftime("%Y-%m-%d"),
+        "date_of_next_send": todays_date,
     }
     response = client.post(
         "/links/", json.dumps(data), headers=normal_user_token_headers
@@ -127,7 +131,7 @@ def test_get_link_shows_days_as_today(client, normal_user_token_headers):
 
     response = client.get(f"/links/1", headers=normal_user_token_headers)
     assert response.status_code == 200
-    assert response.json()["days"] == "Today"
+    assert response.json()["date_of_next_send"] == todays_date
 
 
 def test_get_link_shows_days_as_tomorrow(client, normal_user_token_headers):
@@ -145,7 +149,9 @@ def test_get_link_shows_days_as_tomorrow(client, normal_user_token_headers):
 
     response = client.get(f"/links/1", headers=normal_user_token_headers)
     assert response.status_code == 200
-    assert response.json()["days"] == "Tomorrow"
+
+    tomorrow = (datetime.today() + timedelta(days=1)).strftime("%Y-%m-%d")
+    assert response.json()["date_of_next_send"] == tomorrow
 
 
 def test_get_link_returns_not_found(client, normal_user_token_headers):
