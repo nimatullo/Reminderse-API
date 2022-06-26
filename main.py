@@ -8,11 +8,16 @@ from core.api.links.routes import links
 from core.api.texts.routes import texts
 from core.config import settings
 
+from decouple import config
+
 app = FastAPI()
 
 origins = [
     "https://www.reminderse.com",
 ]
+
+if config("LOCAL"):
+    origins.append("http://localhost:3000")
 
 app.add_middleware(
     CORSMiddleware,

@@ -10,7 +10,7 @@ class Settings(BaseModel):
     authjwt_cookie_samesite: str = "none"
     SECRET_KEY: str = "secret"
     ALGORITHM = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES = 30  # minutes
+    ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 1 day
 
 
 settings = Settings()
