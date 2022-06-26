@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_jwt_auth import AuthJWT
+from pydantic import conset
 
 from core.api.auth.routes import auth
 from core.api.users.routes import me
@@ -16,8 +17,11 @@ origins = [
     "https://www.reminderse.com",
 ]
 
-if config("LOCAL"):
-    origins.append("http://localhost:3000")
+try:
+    if config("LOCAL"):
+        origins.append("http://localhost:3000")
+except Exception as e:
+    print("LOCAL is not set")
 
 app.add_middleware(
     CORSMiddleware,
