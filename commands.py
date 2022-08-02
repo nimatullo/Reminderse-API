@@ -1,3 +1,3 @@
-from flasktest import db
+from core.database.database import create_tables
 
-db.create_all()
+create_tables()
