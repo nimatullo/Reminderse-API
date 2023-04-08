@@ -40,7 +40,7 @@ class DevelopmentConfig(Config):
     MAIL_API_KEY = "fake_key"
     MAIL_PASSWORD = "password"
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = "postgresql://puffer:puffer@localhost:5432/reminderse"
+    SQL_URL = "postgresql://puffer:password123@localhost:5432/reminderse"
     HEROKU_BUILD = "local"
     JWT_TOKEN_LOCATION = 'cookies'
     JWT_ACCESS_COOKIE_PATH = '/api/'

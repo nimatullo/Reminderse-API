@@ -4,7 +4,7 @@ from fastapi_jwt_auth import AuthJWT
 from core.api.auth.models import LoginRequest, RegisterRequest, LoginResponse
 from core.api.schemas.generic_response import MessageResponse
 from core.api.users.service import UserService
-from core.email.send_email import send
+from core.email.send_email import send_confirmation
 from itsdangerous import URLSafeTimedSerializer
 import traceback
 
@@ -31,7 +31,7 @@ async def signup(
     db: get_db = Depends(),
 ) -> MessageResponse:
     background_tasks.add_task(
-        send,
+        send_confirmation,
         registerPayload.email,
         {"token": ts.dumps(registerPayload.email, salt="email-confirmation-salt")},
     )

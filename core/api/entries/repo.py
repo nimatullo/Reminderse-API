@@ -19,6 +19,23 @@ class EntryRepo:
             .all()
         )
 
+    def get_all_for_today(self):
+        today = date.today()
+        links = (
+            self.db.query(Links)
+            .options(joinedload(Users.id))
+            .filter(Links.date_of_next_send == today)
+            .all()
+        )
+        texts = (
+            self.db.query(Text)
+            .options(joinedload(Users))
+            .filter(Text.date_of_next_send == today)
+            .all()
+        )
+
+        return links + texts
+
     def get(self, model, id, user_id):
         return (
             self.db.query(model)

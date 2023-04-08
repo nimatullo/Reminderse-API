@@ -1,4 +1,6 @@
 import asyncio
+from datetime import datetime
+from email import message
 from typing import Dict
 from fastapi_mail import FastMail, ConnectionConfig, MessageSchema
 from decouple import config
@@ -10,20 +12,30 @@ conf = ConnectionConfig(
     MAIL_FROM="hello@reminderse.com",
     MAIL_PORT=587,
     MAIL_SERVER=config("MAIL_SERVER"),
-    MAIL_TLS=True,
-    MAIL_SSL=False,
+    MAIL_STARTTLS=True,
+    MAIL_SSL_TLS=False,
     USE_CREDENTIALS=True,
-    TEMPLATE_FOLDER=Path(__file__).parent / 'templates',
+    TEMPLATE_FOLDER=Path(__file__).parent / "templates",
 )
 
 fm = FastMail(conf)
 
 
-async def send(to: str, body: dict):
+async def send_confirmation(to: str, body: dict):
     message = MessageSchema(
         subject="Welcome to Reminderse! Please confirm your email address",
         recipients=[to],
-        template_body=body
+        template_body=body,
     )
     await fm.send_message(message, template_name="confirmation_email.html")
+    return
+
+
+async def send_daily_links(to: str, body: dict):
+    message = MessageSchema(
+        subject=f"You daily links for {datetime.now().strftime('%d %B %Y')}",
+        recipients=[to],
+        template_body=body,
+    )
+    await fm.send_message(message, template_name="daily_email.html")
     return

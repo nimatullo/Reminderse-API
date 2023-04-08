@@ -50,6 +50,7 @@ class Links(Base):
     user_id = Column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
+    user = relationship("Users", backref=backref("user_links", cascade="all,delete"))
     date = get_new_date()
     date_of_next_send = Column(Date, nullable=False, default=date)
     category_id = Column(Integer, ForeignKey("category.id"))

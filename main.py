@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_jwt_auth import AuthJWT
-from pydantic import conset
 
 from core.api.auth.routes import auth
 from core.api.users.routes import me
 from core.api.links.routes import links
 from core.api.texts.routes import texts
+from core.api.entries.routes import entries
 from core.config import settings
 
 from decouple import config
@@ -46,3 +46,4 @@ app.include_router(auth, prefix="/auth", tags=["auth"])
 app.include_router(me, prefix="/me", tags=["user"])
 app.include_router(links, prefix="/links", tags=["links"])
 app.include_router(texts, prefix="/texts", tags=["texts"])
+app.include_router(entries, prefix="/entries", tags=["entries"])

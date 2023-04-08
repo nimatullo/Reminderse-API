@@ -2,7 +2,9 @@ import validators
 from core.api.entries.models import UpdateEntryRequest
 from core.api.entries.repo import EntryRepo
 from core.api.response import response
-from core.database import get_category_if_exists, add_new_category, get_category_by_id
+from core.database import get_category_if_exists, add_new_category
+
+from core.email.send_email import send_daily_links
 
 from datetime import date, timedelta
 
@@ -90,3 +92,7 @@ class EntryService:
             return "Tomorrow"
         else:
             return date_diff
+
+    def send_all_entries(self):
+        entries = self.repo.get_all_for_today()
+        send_daily_links(entries[0].user.email, entries)

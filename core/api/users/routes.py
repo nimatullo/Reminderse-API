@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from fastapi_jwt_auth import AuthJWT
 from itsdangerous import URLSafeTimedSerializer
 
-from core.email.send_email import send
+from core.email.send_email import send_confirmation
 from core.database.database import get_db
 from core.api.users.service import UserService
 from core.api.exceptions.RouteErrorHandler import RouteErrorHandler
@@ -106,7 +106,7 @@ async def send_confirmation_email(
         USER_ID = Authenticate.get_jwt_subject()
         user_email = UserService(db).get_user_email(USER_ID)
         background_tasks.add_task(
-            send,
+            send_confirmation,
             user_email,
             {"token": ts.dumps(user_email, salt="email-confirmation-salt")},
         )
